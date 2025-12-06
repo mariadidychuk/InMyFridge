@@ -246,7 +246,9 @@ class _FridgeScreenState extends State<FridgeScreen> {
                   onPressed: () {
                     // Navigate to Recipes; Recipes will read from ingredientsBox
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const RecipesScreen()),
+                     MaterialPageRoute(
+                       builder: (_) => const RecipesScreen(filterByFridge: true),
+                     ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
