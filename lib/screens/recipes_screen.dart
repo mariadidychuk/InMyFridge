@@ -2,18 +2,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../models/recipe.dart';
+import 'recipe_details_screen.dart';
+
 /// RecipesScreen
-/// - if filterByFridge == false  -> show all recipes
-/// - if filterByFridge == true   -> show recipes sorted by how well they match
-///                                 current fridge ingredients
+/// - filterByFridge == false: show all recipes (A–Z)
+/// - filterByFridge == true : show recipes sorted by match quality:
+///     1) fewer missing first (missingCount ASC)
+///     2) more have first     (haveCount DESC)
+///     3) name A–Z
 ///
-/// Data assumptions:
-///  - 'ingredientsBox'  : Box<String> with user ingredients
-///  - 'recipesBox'      : Box<String> where each value is a JSON string:
-///        {"id":"r_001","name":"Pancakes","time":"20 min","ingredients":["milk","egg","flour","butter"]}
-///
-///  - We ignore "salt", "pepper", "water" when calculating missing ingredients
-///    (we assume the user always has them).
+/// Matching rules:
+/// - We IGNORE salt/pepper/water for matching:
+///     * they do not contribute to have/missing
+///     * they do not affect sorting
+/// - But they can still exist in the recipe ingredient list and should be shown in details.
 class RecipesScreen extends StatefulWidget {
   final bool filterByFridge;
 
@@ -27,8 +30,8 @@ class _RecipesScreenState extends State<RecipesScreen> {
   late final Box<String> _ingredientsBox;
   late final Box<String> _recipesBox;
 
-  /// Ingredients we always assume the user has.
-  static const Set<String> _assumed = {'salt', 'pepper', 'water'};
+  /// Ingredients ignored in matching/filtering logic.
+  static const Set<String> _ignored = {'salt', 'pepper', 'water'};
 
   @override
   void initState() {
@@ -36,43 +39,84 @@ class _RecipesScreenState extends State<RecipesScreen> {
     _ingredientsBox = Hive.box<String>('ingredientsBox');
     _recipesBox = Hive.box<String>('recipesBox');
 
-    _seedDemoRecipesIfEmpty(); // temporary demo data for development
+    _seedDemoRecipesIfEmpty(); // temporary demo data until DB/API is connected
   }
 
-  /// Temporary demo recipes so that the UI works before you connect a real DB.
+  /// Add a few demo recipes to recipesBox so the UI works immediately.
+  /// Each value is JSON.
   void _seedDemoRecipesIfEmpty() {
     if (_recipesBox.isNotEmpty) return;
 
-    final List<Map<String, dynamic>> demo = [
+    final demo = <Map<String, dynamic>>[
       {
-        "id": "r_001",
+        "id": "r_choco_peanut",
+        "name": "Chocolate Peanut",
+        "timeMinutes": 30,
+        "description":
+            "A quick and easy dessert with a soft crumb and a rich chocolate-peanut taste.",
+        "ingredients": [
+          {"name": "Flour", "amount": "250 g"},
+          {"name": "Sugar", "amount": "100 g"},
+          {"name": "Butter", "amount": "100 g"},
+          {"name": "Eggs", "amount": "2"},
+          {"name": "Milk", "amount": "100 ml"},
+          {"name": "Baking powder", "amount": "5 g"},
+          {"name": "Salt", "amount": "a pinch"},
+          {"name": "Water", "amount": "as needed"},
+        ],
+        "steps": [
+          "Preheat the oven to 180°C (356°F) and grease a baking pan.",
+          "Mix flour and baking powder in a bowl.",
+          "Beat butter and sugar until creamy, then add eggs one by one.",
+          "Add milk and dry ingredients; mix until smooth.",
+          "Pour into the pan and bake for 25–30 minutes.",
+        ],
+        "imageAsset": "", // optional: e.g. "assets/images/chocolate_peanut.jpg"
+        "imageUrl": "",
+      },
+      {
+        "id": "r_pancakes",
         "name": "Pancakes",
-        "time": "20 min",
-        "ingredients": ["milk", "egg", "flour", "butter", "salt"],
+        "timeMinutes": 20,
+        "description":
+            "Classic fluffy pancakes — perfect for breakfast with butter or fruit.",
+        "ingredients": [
+          {"name": "Milk", "amount": "200 ml"},
+          {"name": "Eggs", "amount": "2"},
+          {"name": "Flour", "amount": "180 g"},
+          {"name": "Butter", "amount": "30 g"},
+          {"name": "Salt", "amount": "a pinch"},
+        ],
+        "steps": [
+          "Whisk eggs and milk in a bowl.",
+          "Add flour and whisk until smooth.",
+          "Heat a pan, add a little butter.",
+          "Cook pancakes on both sides until golden.",
+        ],
+        "imageAsset": "",
+        "imageUrl": "",
       },
       {
-        "id": "r_002",
+        "id": "r_tomato_pasta",
         "name": "Tomato Basil Pasta",
-        "time": "25 min",
-        "ingredients": ["pasta", "tomato", "basil", "butter", "salt", "water"],
-      },
-      {
-        "id": "r_003",
-        "name": "Banana Smoothie",
-        "time": "5 min",
-        "ingredients": ["banana", "milk", "water"],
-      },
-      {
-        "id": "r_004",
-        "name": "Broccoli Soup",
-        "time": "30 min",
-        "ingredients": ["broccoli", "milk", "water", "salt", "pepper"],
-      },
-      {
-        "id": "r_005",
-        "name": "Garlic Bread",
-        "time": "15 min",
-        "ingredients": ["bread", "butter", "salt"],
+        "timeMinutes": 25,
+        "description":
+            "Simple pasta with tomatoes and basil — quick, fresh, and comforting.",
+        "ingredients": [
+          {"name": "Pasta", "amount": "200 g"},
+          {"name": "Tomato", "amount": "2"},
+          {"name": "Basil", "amount": "a handful"},
+          {"name": "Butter", "amount": "20 g"},
+          {"name": "Salt", "amount": "to taste"},
+          {"name": "Water", "amount": "for boiling"},
+        ],
+        "steps": [
+          "Boil pasta in salted water.",
+          "Prepare tomatoes and basil.",
+          "Mix pasta with butter, tomatoes, and basil.",
+        ],
+        "imageAsset": "",
+        "imageUrl": "",
       },
     ];
 
@@ -81,33 +125,56 @@ class _RecipesScreenState extends State<RecipesScreen> {
     }
   }
 
-  /// Convert current user ingredients into a lowercase Set,
-  /// ignoring assumed ingredients (salt, pepper, water).
+  String _normalize(String s) => s.trim().toLowerCase();
+
+  /// User ingredients from fridge, lowercased.
   Set<String> _userIngredientsLower() {
     final result = <String>{};
     for (var i = 0; i < _ingredientsBox.length; i++) {
-      final value = (_ingredientsBox.getAt(i) ?? '').trim().toLowerCase();
-      if (value.isEmpty) continue;
-      if (_assumed.contains(value)) continue; // ignore assumed ones
-      result.add(value);
+      final v = _normalize(_ingredientsBox.getAt(i) ?? '');
+      if (v.isEmpty) continue;
+      result.add(v);
     }
     return result;
   }
 
-  /// Parse one recipe JSON string into a typed model.
-  _Recipe _parseRecipe(String rawJson) {
+  /// Parse recipe JSON string from Hive into Recipe model.
+  Recipe _parseRecipe(String rawJson) {
     final map = jsonDecode(rawJson) as Map<String, dynamic>;
-    return _Recipe(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      time: map['time'] as String? ?? '',
-      ingredients: List<String>.from(map['ingredients'] as List),
+
+    final ingredientsJson = (map['ingredients'] as List? ?? const []);
+    final ingredients = ingredientsJson.map((e) {
+      final m = e as Map<String, dynamic>;
+      return RecipeIngredient(
+        name: (m['name'] ?? '').toString(),
+        amount: (m['amount'] ?? '').toString(),
+      );
+    }).toList();
+
+    final stepsRaw = map['steps'];
+    final steps = (stepsRaw is List)
+        ? stepsRaw.map((e) => e.toString()).toList()
+        : <String>[];
+
+    return Recipe(
+      id: (map['id'] ?? '').toString(),
+      name: (map['name'] ?? '').toString(),
+      timeMinutes: int.tryParse((map['timeMinutes'] ?? 0).toString()) ?? 0,
+      description: (map['description'] ?? '').toString(),
+      ingredients: ingredients,
+      steps: steps,
+      imageAsset: (map['imageAsset'] ?? '').toString().isEmpty
+          ? null
+          : (map['imageAsset'] ?? '').toString(),
+      imageUrl: (map['imageUrl'] ?? '').toString().isEmpty
+          ? null
+          : (map['imageUrl'] ?? '').toString(),
     );
   }
 
-  /// Load all recipes from recipesBox.
-  List<_Recipe> _loadAllRecipes() {
-    final list = <_Recipe>[];
+  /// Load all recipes from Hive.
+  List<Recipe> _loadAllRecipes() {
+    final list = <Recipe>[];
     for (var i = 0; i < _recipesBox.length; i++) {
       final raw = _recipesBox.getAt(i);
       if (raw == null) continue;
@@ -116,73 +183,56 @@ class _RecipesScreenState extends State<RecipesScreen> {
     return list;
   }
 
-  /// Compute match info (have/missing) for each recipe based on current fridge.
-  List<_RecipeMatch> _buildMatches() {
-    final have = _userIngredientsLower();
-    final all = _loadAllRecipes();
+  /// Compute match (have/missing) for a recipe based on current fridge ingredients.
+  /// - ignores salt/pepper/water completely
+  _RecipeMatch _matchRecipe(Recipe recipe, Set<String> userIngredientsLower) {
+    final have = <String>[];
+    final missing = <String>[];
 
-    final matches = <_RecipeMatch>[];
+    // Use ingredient names for matching (case-insensitive).
+    for (final ing in recipe.ingredients) {
+      final nameLower = _normalize(ing.name);
 
-    for (final recipe in all) {
-      // Normalize recipe ingredients and ignore assumed ones.
-      final normalized = recipe.ingredients
-          .map((e) => e.trim().toLowerCase())
-          .where((e) => e.isNotEmpty && !_assumed.contains(e))
-          .toList();
+      // Ignore salt/pepper/water in matching logic
+      if (_ignored.contains(nameLower)) continue;
 
-      final haveSet = <String>{};
-      final missingSet = <String>{};
-
-      for (final ing in normalized) {
-        if (have.contains(ing)) {
-          haveSet.add(ing);
-        } else {
-          missingSet.add(ing);
-        }
+      if (userIngredientsLower.contains(nameLower)) {
+        have.add(nameLower);
+      } else {
+        missing.add(nameLower);
       }
-
-      matches.add(
-        _RecipeMatch(
-          recipe: recipe,
-          have: haveSet.toList()..sort(),
-          missing: missingSet.toList()..sort(),
-        ),
-      );
     }
 
-    return matches;
+    have.sort();
+    missing.sort();
+
+    return _RecipeMatch(recipe: recipe, have: have, missing: missing);
   }
 
-  /// Build final list to show on screen depending on filterByFridge flag.
+  /// Build display list depending on screen mode.
   List<_RecipeMatch> _buildDisplayList() {
-    final matches = _buildMatches();
+    final user = _userIngredientsLower();
+    final all = _loadAllRecipes();
+
+    final matches = all.map((r) => _matchRecipe(r, user)).toList();
 
     if (!widget.filterByFridge) {
-      // Bottom tab "Recipes": show ALL recipes, sorted by name.
+      // Bottom tab "Recipes": show all A–Z by recipe name.
       matches.sort(
-        (a, b) =>
-            a.recipe.name.toLowerCase().compareTo(b.recipe.name.toLowerCase()),
+        (a, b) => a.recipe.name.toLowerCase().compareTo(b.recipe.name.toLowerCase()),
       );
       return matches;
     }
 
-    // "See Recipes" from Fridge:
-    // sort by:
-    //  1) missing count ascending
-    //  2) have count descending
-    //  3) name
+    // From Fridge "See Recipes": sort by match quality.
     matches.sort((a, b) {
-      final missingDiff =
-          a.missing.length.compareTo(b.missing.length); // fewer missing first
+      final missingDiff = a.missing.length.compareTo(b.missing.length);
       if (missingDiff != 0) return missingDiff;
 
-      final haveDiff =
-          b.have.length.compareTo(a.have.length); // more have first
+      final haveDiff = b.have.length.compareTo(a.have.length);
       if (haveDiff != 0) return haveDiff;
 
-      return a.recipe.name
-          .toLowerCase()
-          .compareTo(b.recipe.name.toLowerCase());
+      return a.recipe.name.toLowerCase().compareTo(b.recipe.name.toLowerCase());
     });
 
     return matches;
@@ -202,13 +252,19 @@ class _RecipesScreenState extends State<RecipesScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ValueListenableBuilder(
-          // Rebuild when ingredients change -> matching changes
           valueListenable: _ingredientsBox.listenable(),
           builder: (context, Box<String> _, __) {
             final matches = _buildDisplayList();
 
             if (matches.isEmpty) {
-              return _EmptyState(filterByFridge: widget.filterByFridge);
+              return Center(
+                child: Text(
+                  widget.filterByFridge
+                      ? 'No recipes match your current ingredients yet.\nTry adding more items in your Fridge.'
+                      : 'No recipes available yet.',
+                  textAlign: TextAlign.center,
+                ),
+              );
             }
 
             return ListView.separated(
@@ -216,7 +272,21 @@ class _RecipesScreenState extends State<RecipesScreen> {
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final m = matches[index];
-                return _RecipeCard(match: m);
+                return _RecipeCard(
+                  match: m,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => RecipeDetailsScreen(
+                          recipe: m.recipe,
+                          haveIngredientsLower: m.have,
+                          missingIngredientsLower: m.missing,
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
             );
           },
@@ -226,147 +296,130 @@ class _RecipesScreenState extends State<RecipesScreen> {
   }
 }
 
-/// Empty state text depending on where user came from.
-class _EmptyState extends StatelessWidget {
-  const _EmptyState({required this.filterByFridge});
+/// Recipe match info used for UI.
+class _RecipeMatch {
+  final Recipe recipe;
+  final List<String> have;    // lowercased
+  final List<String> missing; // lowercased
 
-  final bool filterByFridge;
-
-  @override
-  Widget build(BuildContext context) {
-    final text = filterByFridge
-        ? 'No recipes match your current ingredients yet.\nTry adding more items in your Fridge.'
-        : 'No recipes available yet.\nPlease add recipes data to the app.';
-    return Center(
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
+  _RecipeMatch({
+    required this.recipe,
+    required this.have,
+    required this.missing,
+  });
 }
 
-/// UI card for one recipe with "have" / "missing" ingredients.
+/// Card UI (similar to your earlier version):
+/// - Title + time
+/// - "You have X of Y ingredients"
+/// - Chips "You have" (green) and "Missing" (red)
 class _RecipeCard extends StatelessWidget {
-  const _RecipeCard({required this.match});
-
   final _RecipeMatch match;
+  final VoidCallback onTap;
+
+  const _RecipeCard({
+    required this.match,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     const accent = Color(0xFFD87C5A);
-    const haveColor = Color(0xFF2E7D32); // green-ish
-    const missingColor = Color(0xFFC62828); // red-ish
+    const haveColor = Color(0xFF2E7D32);
+    const missingColor = Color(0xFFC62828);
 
-    final recipe = match.recipe;
-    final totalCount = match.have.length + match.missing.length;
+    final total = match.have.length + match.missing.length;
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 12,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.restaurant_menu, color: accent),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title + time
-                Text(
-                  recipe.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x14000000),
+              blurRadius: 12,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.restaurant_menu, color: accent),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    match.recipe.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                if (recipe.time.isNotEmpty) ...[
                   const SizedBox(height: 2),
                   Text(
-                    recipe.time,
+                    '${match.recipe.timeMinutes} min',
                     style: const TextStyle(fontSize: 12, color: Colors.black54),
                   ),
-                ],
-
-                const SizedBox(height: 8),
-
-                // Summary line "You have X of Y ingredients"
-                if (totalCount > 0)
-                  Text(
-                    'You have ${match.have.length} of $totalCount ingredients',
-                    style: const TextStyle(fontSize: 12, color: Colors.black87),
-                  ),
-
-                const SizedBox(height: 6),
-
-                // Have list (green)
-                if (match.have.isNotEmpty) ...[
-                  const Text(
-                    'You have:',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 2),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 4,
-                    children: match.have
-                        .map(
-                          (h) => _IngredientChip(
-                            label: h,
-                            color: haveColor,
-                          ),
-                        )
-                        .toList(),
-                  ),
+                  const SizedBox(height: 8),
+                  if (total > 0)
+                    Text(
+                      'You have ${match.have.length} of $total ingredients',
+                      style: const TextStyle(fontSize: 12, color: Colors.black87),
+                    ),
                   const SizedBox(height: 6),
-                ],
 
-                // Missing list (red)
-                if (match.missing.isNotEmpty) ...[
-                  const Text(
-                    'Missing:',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 2),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 4,
-                    children: match.missing
-                        .map(
-                          (m) => _IngredientChip(
-                            label: m,
-                            color: missingColor,
-                          ),
-                        )
-                        .toList(),
-                  ),
+                  if (match.have.isNotEmpty) ...[
+                    const Text(
+                      'You have:',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 2),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      children: match.have
+                          .map((h) => _Chip(label: h, color: haveColor))
+                          .toList(),
+                    ),
+                    const SizedBox(height: 6),
+                  ],
+
+                  if (match.missing.isNotEmpty) ...[
+                    const Text(
+                      'Missing:',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 2),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      children: match.missing
+                          .map((m) => _Chip(label: m, color: missingColor))
+                          .toList(),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Small colored chip to display one ingredient.
-class _IngredientChip extends StatelessWidget {
-  const _IngredientChip({required this.label, required this.color});
-
+class _Chip extends StatelessWidget {
   final String label;
   final Color color;
+
+  const _Chip({required this.label, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -383,32 +436,4 @@ class _IngredientChip extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Simple data class for recipe data.
-class _Recipe {
-  final String id;
-  final String name;
-  final String time;
-  final List<String> ingredients;
-
-  _Recipe({
-    required this.id,
-    required this.name,
-    required this.time,
-    required this.ingredients,
-  });
-}
-
-/// Data class combining a recipe and how it matches current fridge.
-class _RecipeMatch {
-  final _Recipe recipe;
-  final List<String> have;
-  final List<String> missing;
-
-  _RecipeMatch({
-    required this.recipe,
-    required this.have,
-    required this.missing,
-  });
 }
