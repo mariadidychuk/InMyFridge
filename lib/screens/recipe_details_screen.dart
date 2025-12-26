@@ -3,17 +3,17 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../models/recipe.dart';
 
 /// Recipe Details screen:
-/// - Ingredient/Amount columns aligned like in Figma
-/// - Missing X icon only for missing ingredients
-/// - salt/pepper/water are displayed if present, but are NEVER marked have/missing
+/// - Keep original typography (same font sizes/weights as your code)
+/// - Ingredients card EXACT like reference (beige header + white rows + border)
+/// - Ingredient icon tiles (from assets/icons/ingredients)
+/// - NO missing / NO red / NO X
+/// - salt/pepper/water are displayed normally
 /// - Steps are rendered as "Step 1/2/3"
 class RecipeDetailsScreen extends StatefulWidget {
   final Recipe recipe;
 
-  /// Lowercased ingredient names that user has (matching-only set)
+  /// Keep params to avoid breaking other places in your app
   final List<String> haveIngredientsLower;
-
-  /// Lowercased ingredient names that are missing (matching-only set)
   final List<String> missingIngredientsLower;
 
   const RecipeDetailsScreen({
@@ -30,38 +30,21 @@ class RecipeDetailsScreen extends StatefulWidget {
 class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
   late final Box<String> _favoritesBox;
 
-  /// Ingredients we always ignore for matching (never have/missing).
-  static const Set<String> _ignored = {'salt', 'pepper', 'water'};
-
   @override
   void initState() {
     super.initState();
-    // Get an already opened Hive box (opened in main.dart)
     _favoritesBox = Hive.box<String>('favoritesBox');
   }
 
-  // True if this recipe ID is stored in favorites
   bool get _isBookmarked => _favoritesBox.containsKey(widget.recipe.id);
 
-  // Toggle bookmark state (add/remove by recipe.id)
   Future<void> _toggleBookmark() async {
     if (_isBookmarked) {
       await _favoritesBox.delete(widget.recipe.id);
     } else {
-      // Store recipe id as both key and value (simple "set" behavior)
       await _favoritesBox.put(widget.recipe.id, widget.recipe.id);
     }
-    setState(() {}); // Refresh AppBar icon immediately
-  }
-
-  String _normalize(String s) => s.trim().toLowerCase();
-
-  bool _isIgnored(String name) => _ignored.contains(_normalize(name));
-
-  bool _isMissing(String ingredientName) {
-    final nameLower = _normalize(ingredientName);
-    if (_ignored.contains(nameLower)) return false; // never missing
-    return widget.missingIngredientsLower.contains(nameLower);
+    setState(() {});
   }
 
   @override
@@ -118,20 +101,25 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
-                  Text(
-                    recipe.name,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  // Title 
+                 Text(
+                   recipe.name,
+                   maxLines: 1,
+                   overflow: TextOverflow.ellipsis,
+                   softWrap: false,
+                   style: const TextStyle(
+                   fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    height: 1.1,
+                     ),
+                     ),
                   const SizedBox(height: 8),
 
                   // Time
                   Row(
                     children: [
-                      const Icon(Icons.schedule, size: 18, color: Colors.black54),
+                      const Icon(Icons.schedule, size: 18, color: Color (0xFFD8CFC7),
+                      ),
                       const SizedBox(width: 6),
                       Text(
                         '${recipe.timeMinutes} min',
@@ -141,7 +129,7 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  // Description (dynamic per recipe)
+                  // Description
                   Text(
                     recipe.description,
                     style: const TextStyle(fontSize: 13, height: 1.35),
@@ -149,16 +137,9 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
 
                   const SizedBox(height: 18),
 
-                  const Text(
-                    'Ingredients:',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 10),
-
-                  _IngredientsMidAligned(
+                  
+                  _IngredientsCardExactLikeReference(
                     ingredients: recipe.ingredients,
-                    isMissing: _isMissing,
-                    isIgnored: _isIgnored,
                   ),
 
                   const SizedBox(height: 18),
@@ -216,114 +197,160 @@ class _HeaderImage extends StatelessWidget {
   }
 }
 
-/// Ingredients table:
-/// - Ingredient column on the left
-/// - Amount column starts closer to center (not pinned to the right)
-/// - Missing X icon only for missing items
-/// - Ignored items (salt/pepper/water): shown normally, no status icon
-class _IngredientsMidAligned extends StatelessWidget {
+/// - Amount column not pinned hard right 
+class _IngredientsCardExactLikeReference extends StatelessWidget {
   final List<RecipeIngredient> ingredients;
-  final bool Function(String ingredientName) isMissing;
-  final bool Function(String ingredientName) isIgnored;
 
-  const _IngredientsMidAligned({
+  const _IngredientsCardExactLikeReference({
     required this.ingredients,
-    required this.isMissing,
-    required this.isIgnored,
   });
+
+  String _normalize(String s) => s.trim().toLowerCase();
+
+  String? _iconFor(String name) {
+    final key = _normalize(name);
+
+    const map = <String, String>{
+      'spaghetti': 'assets/icons/ingredients/spaghetti.png',
+      'egg': 'assets/icons/ingredients/egg.png',
+      'eggs': 'assets/icons/ingredients/egg.png',
+      'bacon': 'assets/icons/ingredients/bacon.png',
+      'diced bacon': 'assets/icons/ingredients/bacon.png',
+      'parmesan': 'assets/icons/ingredients/cheese.png',
+      'grated parmesan': 'assets/icons/ingredients/cheese.png',
+      'cheese': 'assets/icons/ingredients/cheese.png',
+      'salt': 'assets/icons/ingredients/salt.png',
+      'pepper': 'assets/icons/ingredients/pepper.png',
+    };
+
+    return map[key];
+  }
 
   @override
   Widget build(BuildContext context) {
-    const missingColor = Color(0xFFC62828);
+    // Reference-like palette
+    const border = Color(0x22_000000);
+    const headerBg = Color(0xFFFBF6F2);
+    const rowBg = Colors.white;
+    const divider = Color(0x14_000000);
+    const iconTileBg = Color(0xFFFDF9F7);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Column proportions like in Figma:
-        // Ingredient is wider, Amount starts closer to center
-        final ingredientWidth = constraints.maxWidth * 0.65;
-        final amountWidth = constraints.maxWidth * 0.35;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: border),
+        ),
+        child: Column(
           children: [
-            // Header row
-            Row(
-              children: [
-                SizedBox(
-                  width: ingredientWidth,
-                  child: const Text(
-                    'Ingredient',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                  ),
-                ),
-                SizedBox(
-                  width: amountWidth,
-                  child: const Text(
-                    'Amount',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                  ),
-                ),
-              ],
-            ),
-            const Divider(height: 16),
+            // HEADER (beige)
+            Container(
+              color: headerBg,
+              padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
+              child: LayoutBuilder(
+                builder: (context, c) {
+                  // Amount is slightly towards center
+                  final amountW = c.maxWidth * 0.36;
+                  final leftW = c.maxWidth - amountW;
 
-            for (int i = 0; i < ingredients.length; i++) ...[
-              Builder(
-                builder: (context) {
-                  final ing = ingredients[i];
-                  final missing = isMissing(ing.name);
-                  final ignored = isIgnored(ing.name);
-
-                  // Show X icon only for missing (not for salt/pepper/water)
-                  final showMissingIcon = missing && !ignored;
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Fixed icon slot to keep alignment
-                        SizedBox(
-                          width: 22,
-                          child: showMissingIcon
-                              ? const Icon(Icons.close, size: 16, color: missingColor)
-                              : const SizedBox.shrink(),
+                  return Row(
+                    children: [
+                      SizedBox(
+                        width: leftW,
+                        child: const Text(
+                          'Ingredients',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
                         ),
-                        const SizedBox(width: 8),
-
-                        // Ingredient column (left)
-                        SizedBox(
-                          width: ingredientWidth - 30, // icon + spacing
-                          child: Text(
-                            ing.name,
-                            style: const TextStyle(fontSize: 13),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      ),
+                      SizedBox(
+                        width: amountW,
+                        child: const Text(
+                          'Amount',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
                         ),
-
-                        // Amount column (NOT right-aligned)
-                        SizedBox(
-                          width: amountWidth,
-                          child: Text(
-                            ing.amount,
-                            style: const TextStyle(fontSize: 13),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   );
                 },
               ),
-              if (i != ingredients.length - 1) const Divider(height: 14),
-            ],
+            ),
+
+            // ROWS (white)
+            Container(
+              color: rowBg,
+              padding: const EdgeInsets.fromLTRB(18, 2, 18, 10),
+              child: LayoutBuilder(
+                builder: (context, c) {
+                  final amountW = c.maxWidth * 0.36;
+                  final leftW = c.maxWidth - amountW;
+
+                  return Column(
+                    children: [
+                      for (int i = 0; i < ingredients.length; i++) ...[
+                        if (i != 0) const Divider(height: 1, color: divider),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          child: Row(
+                            children: [
+                              // Icon tile
+                              Container(
+                                width: 34,
+                                height: 34,
+                                decoration: BoxDecoration(
+                                  color: iconTileBg,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: const Color(0x11_000000)),
+                                ),
+                                child: Center(
+                                  child: Builder(
+                                    builder: (_) {
+                                      final iconPath = _iconFor(ingredients[i].name);
+                                      return iconPath != null
+                                          ? Image.asset(iconPath, width: 18, height: 18)
+                                          : const Icon(Icons.restaurant,
+                                              size: 18, color: Colors.black45);
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+
+                              // Name 
+                              SizedBox(
+                                width: leftW - 48, // icon + spacing
+                                child: Text(
+                                  ingredients[i].name,
+                                  style: const TextStyle(fontSize: 13),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+
+                              // Amount
+                              SizedBox(
+                                width: amountW,
+                                child: Text(
+                                  ingredients[i].amount,
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  );
+                },
+              ),
+            ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }
 
-/// Steps list as "Step 1/2/3".
+/// Steps list as "Step 1/2/3". 
 class _StepsNumbered extends StatelessWidget {
   final List<String> steps;
 

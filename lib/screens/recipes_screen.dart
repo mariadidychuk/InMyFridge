@@ -39,90 +39,9 @@ class _RecipesScreenState extends State<RecipesScreen> {
     _ingredientsBox = Hive.box<String>('ingredientsBox');
     _recipesBox = Hive.box<String>('recipesBox');
 
-    _seedDemoRecipesIfEmpty(); // temporary demo data until DB/API is connected
-  }
-
-  /// Add a few demo recipes to recipesBox so the UI works immediately.
-  /// Each value is JSON.
-  void _seedDemoRecipesIfEmpty() {
-    if (_recipesBox.isNotEmpty) return;
-
-    final demo = <Map<String, dynamic>>[
-      {
-        "id": "r_choco_peanut",
-        "name": "Chocolate Peanut",
-        "timeMinutes": 30,
-        "description":
-            "A quick and easy dessert with a soft crumb and a rich chocolate-peanut taste.",
-        "ingredients": [
-          {"name": "Flour", "amount": "250 g"},
-          {"name": "Sugar", "amount": "100 g"},
-          {"name": "Butter", "amount": "100 g"},
-          {"name": "Eggs", "amount": "2"},
-          {"name": "Milk", "amount": "100 ml"},
-          {"name": "Baking powder", "amount": "5 g"},
-          {"name": "Salt", "amount": "a pinch"},
-          {"name": "Water", "amount": "as needed"},
-        ],
-        "steps": [
-          "Preheat the oven to 180°C (356°F) and grease a baking pan.",
-          "Mix flour and baking powder in a bowl.",
-          "Beat butter and sugar until creamy, then add eggs one by one.",
-          "Add milk and dry ingredients; mix until smooth.",
-          "Pour into the pan and bake for 25–30 minutes.",
-        ],
-        "imageAsset": "", // optional: e.g. "assets/images/chocolate_peanut.jpg"
-        "imageUrl": "",
-      },
-      {
-        "id": "r_pancakes",
-        "name": "Pancakes",
-        "timeMinutes": 20,
-        "description":
-            "Classic fluffy pancakes — perfect for breakfast with butter or fruit.",
-        "ingredients": [
-          {"name": "Milk", "amount": "200 ml"},
-          {"name": "Eggs", "amount": "2"},
-          {"name": "Flour", "amount": "180 g"},
-          {"name": "Butter", "amount": "30 g"},
-          {"name": "Salt", "amount": "a pinch"},
-        ],
-        "steps": [
-          "Whisk eggs and milk in a bowl.",
-          "Add flour and whisk until smooth.",
-          "Heat a pan, add a little butter.",
-          "Cook pancakes on both sides until golden.",
-        ],
-        "imageAsset": "",
-        "imageUrl": "",
-      },
-      {
-        "id": "r_tomato_pasta",
-        "name": "Tomato Basil Pasta",
-        "timeMinutes": 25,
-        "description":
-            "Simple pasta with tomatoes and basil — quick, fresh, and comforting.",
-        "ingredients": [
-          {"name": "Pasta", "amount": "200 g"},
-          {"name": "Tomato", "amount": "2"},
-          {"name": "Basil", "amount": "a handful"},
-          {"name": "Butter", "amount": "20 g"},
-          {"name": "Salt", "amount": "to taste"},
-          {"name": "Water", "amount": "for boiling"},
-        ],
-        "steps": [
-          "Boil pasta in salted water.",
-          "Prepare tomatoes and basil.",
-          "Mix pasta with butter, tomatoes, and basil.",
-        ],
-        "imageAsset": "",
-        "imageUrl": "",
-      },
-    ];
-
-    for (final r in demo) {
-      _recipesBox.add(jsonEncode(r));
-    }
+    // ✅ IMPORTANT:
+    // No demo seeding here anymore.
+    // Seeding is done once in main.dart via seedRecipesIfEmpty(recipesBox).
   }
 
   String _normalize(String s) => s.trim().toLowerCase();
@@ -138,49 +57,23 @@ class _RecipesScreenState extends State<RecipesScreen> {
     return result;
   }
 
-  /// Parse recipe JSON string from Hive into Recipe model.
+  /// Parse recipe JSON string (stored in Hive) into Recipe model.
+  /// Uses the existing factory Recipe.fromMap(Map) as required.
   Recipe _parseRecipe(String rawJson) {
     final map = jsonDecode(rawJson) as Map<String, dynamic>;
-
-    final ingredientsJson = (map['ingredients'] as List? ?? const []);
-    final ingredients = ingredientsJson.map((e) {
-      final m = e as Map<String, dynamic>;
-      return RecipeIngredient(
-        name: (m['name'] ?? '').toString(),
-        amount: (m['amount'] ?? '').toString(),
-      );
-    }).toList();
-
-    final stepsRaw = map['steps'];
-    final steps = (stepsRaw is List)
-        ? stepsRaw.map((e) => e.toString()).toList()
-        : <String>[];
-
-    return Recipe(
-      id: (map['id'] ?? '').toString(),
-      name: (map['name'] ?? '').toString(),
-      timeMinutes: int.tryParse((map['timeMinutes'] ?? 0).toString()) ?? 0,
-      description: (map['description'] ?? '').toString(),
-      ingredients: ingredients,
-      steps: steps,
-      imageAsset: (map['imageAsset'] ?? '').toString().isEmpty
-          ? null
-          : (map['imageAsset'] ?? '').toString(),
-      imageUrl: (map['imageUrl'] ?? '').toString().isEmpty
-          ? null
-          : (map['imageUrl'] ?? '').toString(),
-    );
+    return Recipe.fromMap(map);
   }
 
   /// Load all recipes from Hive.
+  ///
+  /// ✅ Your seed stores recipes as:
+  ///    key = recipe.id, value = JSON string
+  /// So we must iterate over box.values (NOT add/getAt index list).
   List<Recipe> _loadAllRecipes() {
-    final list = <Recipe>[];
-    for (var i = 0; i < _recipesBox.length; i++) {
-      final raw = _recipesBox.getAt(i);
-      if (raw == null) continue;
-      list.add(_parseRecipe(raw));
-    }
-    return list;
+    return _recipesBox.values
+        .where((raw) => raw.trim().isNotEmpty)
+        .map(_parseRecipe)
+        .toList();
   }
 
   /// Compute match (have/missing) for a recipe based on current fridge ingredients.
@@ -189,7 +82,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
     final have = <String>[];
     final missing = <String>[];
 
-    // Use ingredient names for matching (case-insensitive).
     for (final ing in recipe.ingredients) {
       final nameLower = _normalize(ing.name);
 
@@ -251,39 +143,48 @@ class _RecipesScreenState extends State<RecipesScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
+
+        // ✅ Listen to BOTH:
+        // - recipesBox: when seed writes recipes to Hive
+        // - ingredientsBox: when user changes fridge ingredients
         child: ValueListenableBuilder(
-          valueListenable: _ingredientsBox.listenable(),
-          builder: (context, Box<String> _, __) {
-            final matches = _buildDisplayList();
+          valueListenable: _recipesBox.listenable(),
+          builder: (context, Box<String> __, ___) {
+            return ValueListenableBuilder(
+              valueListenable: _ingredientsBox.listenable(),
+              builder: (context, Box<String> _, ____) {
+                final matches = _buildDisplayList();
 
-            if (matches.isEmpty) {
-              return Center(
-                child: Text(
-                  widget.filterByFridge
-                      ? 'No recipes match your current ingredients yet.\nTry adding more items in your Fridge.'
-                      : 'No recipes available yet.',
-                  textAlign: TextAlign.center,
-                ),
-              );
-            }
+                if (matches.isEmpty) {
+                  return Center(
+                    child: Text(
+                      widget.filterByFridge
+                          ? 'No recipes match your current ingredients yet.\nTry adding more items in your Fridge.'
+                          : 'No recipes available yet.',
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
 
-            return ListView.separated(
-              itemCount: matches.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final m = matches[index];
-                return _RecipeCard(
-                  match: m,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => RecipeDetailsScreen(
-                          recipe: m.recipe,
-                          haveIngredientsLower: m.have,
-                          missingIngredientsLower: m.missing,
-                        ),
-                      ),
+                return ListView.separated(
+                  itemCount: matches.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final m = matches[index];
+                    return _RecipeCard(
+                      match: m,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => RecipeDetailsScreen(
+                              recipe: m.recipe,
+                              haveIngredientsLower: m.have,
+                              missingIngredientsLower: m.missing,
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
@@ -299,7 +200,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
 /// Recipe match info used for UI.
 class _RecipeMatch {
   final Recipe recipe;
-  final List<String> have;    // lowercased
+  final List<String> have; // lowercased
   final List<String> missing; // lowercased
 
   _RecipeMatch({
@@ -309,7 +210,7 @@ class _RecipeMatch {
   });
 }
 
-/// Card UI (similar to your earlier version):
+/// Card UI:
 /// - Title + time
 /// - "You have X of Y ingredients"
 /// - Chips "You have" (green) and "Missing" (red)
@@ -374,7 +275,6 @@ class _RecipeCard extends StatelessWidget {
                       style: const TextStyle(fontSize: 12, color: Colors.black87),
                     ),
                   const SizedBox(height: 6),
-
                   if (match.have.isNotEmpty) ...[
                     const Text(
                       'You have:',
@@ -390,7 +290,6 @@ class _RecipeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                   ],
-
                   if (match.missing.isNotEmpty) ...[
                     const Text(
                       'Missing:',
