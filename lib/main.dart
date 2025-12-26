@@ -15,6 +15,7 @@ Future<void> main() async {
   await Hive.openBox<String>('ingredientsBox');
   final recipesBox = await Hive.openBox<String>('recipesBox');
   await Hive.openBox<String>('favoritesBox');
+  await Hive.openBox<String>('calendarBox');
 
   // 2) Seed recipes (only if recipesBox is empty)
   await seedRecipesIfEmpty(recipesBox);

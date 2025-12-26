@@ -6,9 +6,6 @@ import 'screens/calendar_screen.dart';
 import 'screens/bookmarks_screen.dart';
 import 'screens/fridge_screen.dart';
 
-/// Root widget that holds the bottom navigation bar and all main screens.
-/// This file defines the app "skeleton" — one shared Scaffold for all tabs.
-/// Once created, you won't need to modify main.dart again.
 class AppScaffold extends StatefulWidget {
   const AppScaffold({super.key});
 
@@ -17,10 +14,8 @@ class AppScaffold extends StatefulWidget {
 }
 
 class _AppScaffoldState extends State<AppScaffold> {
-  // Keeps track of the current tab index (0–3)
   int _index = 3; // start on Fridge tab (index 3)
 
-  // List of screens displayed for each tab
   final _screens = const [
     RecipesScreen(),
     CalendarScreen(),
@@ -31,13 +26,14 @@ class _AppScaffoldState extends State<AppScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Background matches Figma color palette
       backgroundColor: const Color(0xFFFFF6F2),
 
-      // Display the current screen
-      body: _screens[_index],
+      // ✅ Keeps state of all tabs (Calendar won't reset)
+      body: IndexedStack(
+        index: _index,
+        children: _screens,
+      ),
 
-      // Custom rounded bottom navigation bar
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
         child: Container(
@@ -46,7 +42,6 @@ class _AppScaffoldState extends State<AppScaffold> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
-              // soft floating shadow like in the mockup
               BoxShadow(
                 color: Color(0x1A000000),
                 blurRadius: 12,
@@ -54,8 +49,6 @@ class _AppScaffoldState extends State<AppScaffold> {
               ),
             ],
           ),
-
-          // ClipRRect keeps the bottom bar fully rounded
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: BottomNavigationBar(
@@ -63,13 +56,9 @@ class _AppScaffoldState extends State<AppScaffold> {
               elevation: 0,
               type: BottomNavigationBarType.fixed,
               currentIndex: _index,
-
-              // Update index when user taps a tab
               onTap: (i) => setState(() => _index = i),
-
-              // Colors & styles to match your Figma design
-              selectedItemColor: const Color(0xFFD87C5A), // active orange
-              unselectedItemColor: const Color(0xFF8C8C8C), // muted gray
+              selectedItemColor: const Color(0xFFD87C5A),
+              unselectedItemColor: const Color(0xFF8C8C8C),
               selectedLabelStyle: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -79,8 +68,6 @@ class _AppScaffoldState extends State<AppScaffold> {
                 fontWeight: FontWeight.w500,
               ),
               showUnselectedLabels: true,
-
-              // Bottom navigation items
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.restaurant_menu),
