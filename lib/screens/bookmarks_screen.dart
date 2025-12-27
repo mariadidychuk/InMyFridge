@@ -56,6 +56,42 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     return favBox.keys.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();
   }
 
+  // ✅ remove favorite regardless of storage style (keys OR values)
+  Future<void> _removeFavorite(String recipeId) async {
+    // If stored as keys: key == recipeId
+    if (_favoritesBox.containsKey(recipeId)) {
+      await _favoritesBox.delete(recipeId);
+      return;
+    }
+
+    // If stored as values: find matching value and delete that key
+    dynamic keyToDelete;
+    for (final entry in _favoritesBox.toMap().entries) {
+      if (entry.value.toString() == recipeId) {
+        keyToDelete = entry.key;
+        break;
+      }
+    }
+    if (keyToDelete != null) {
+      await _favoritesBox.delete(keyToDelete);
+    }
+  }
+
+  // ✅ add back favorite (for Undo) - works for both storage styles
+  Future<void> _addFavoriteBack(String recipeId) async {
+    // If box is used with keys, keep id as key:
+    if (_favoritesBox.containsKey(recipeId)) return;
+
+    // If the box currently behaves like key-value storage, put is fine.
+    // If it behaves like list (values), add is fine.
+    // We'll try to restore in the most compatible way:
+    try {
+      await _favoritesBox.put(recipeId, recipeId);
+    } catch (_) {
+      await _favoritesBox.add(recipeId);
+    }
+  }
+
   // Returns user's available ingredients (lowercase)
   Set<String> _userIngredientsLower(Box<String> ingredientsBox) {
     final result = <String>{};
@@ -102,6 +138,69 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     if (url.isNotEmpty) return url;
 
     return null;
+  }
+
+  Future<bool> _confirmRemove(BuildContext context) async {
+    final res = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Remove bookmark?'),
+        content: const Text('This recipe will be removed from your bookmarks.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Remove'),
+          ),
+        ],
+      ),
+    );
+    return res ?? false;
+  }
+
+  Widget _dismissBg() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: const EdgeInsets.only(right: 18),
+      decoration: BoxDecoration(
+        color: Colors.red.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Icon(Icons.delete_outline, color: Colors.red),
+          SizedBox(width: 8),
+          Text(
+            'Remove',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showUndoSnack({
+    required String recipeId,
+    required String title,
+  }) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('"$title" removed'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () => _addFavoriteBack(recipeId),
+        ),
+        duration: const Duration(seconds: 4),
+      ),
+    );
   }
 
   Widget _imageCard({
@@ -151,13 +250,12 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      // More stops = smoother, less “hard line”
                       stops: [0.0, 0.45, 0.75, 1.0],
                       colors: [
-                        Color(0x00000000), // transparent
-                        Color(0x24000000), // very light
-                        Color(0x4D000000), // medium
-                        Color(0x80000000), // dark but not too heavy
+                        Color(0x00000000),
+                        Color(0x24000000),
+                        Color(0x4D000000),
+                        Color(0x80000000),
                       ],
                     ),
                   ),
@@ -271,20 +369,30 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 
                         final img = _imageFromMap(map);
 
-                        return _imageCard(
-                          img: img,
-                          title: recipe.name,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => RecipeDetailsScreen(
-                                  recipe: recipe,
-                                  haveIngredientsLower: haveList,
-                                  missingIngredientsLower: missing,
-                                ),
-                              ),
-                            );
+                        return Dismissible(
+                          key: ValueKey('bm_${recipe.id}'),
+                          direction: DismissDirection.endToStart,
+                          background: _dismissBg(),
+                          confirmDismiss: (_) => _confirmRemove(context),
+                          onDismissed: (_) async {
+                            await _removeFavorite(recipe.id);
+                            _showUndoSnack(recipeId: recipe.id, title: recipe.name);
                           },
+                          child: _imageCard(
+                            img: img,
+                            title: recipe.name,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => RecipeDetailsScreen(
+                                    recipe: recipe,
+                                    haveIngredientsLower: haveList,
+                                    missingIngredientsLower: missing,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
