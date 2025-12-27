@@ -85,6 +85,7 @@
     "id": "r03",
     "name": "Avocado Toast",
     "timeMinutes": 10,
+    "imageAsset": "assets/images/r03_avocado_toast.png",
     "description": "Fast breakfast toast with mashed avocado.",
     "ingredients": [
       {
@@ -118,7 +119,7 @@
     "id": "r04",
     "name": "Tomato Basil Pasta",
     "timeMinutes": 18,
-    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
+    "imageAsset": "assets/images/r04_tomato_basil_pasta.png",
     "description": "Simple tomato pasta with basil.",
     "ingredients": [
       {
@@ -156,6 +157,7 @@
     "id": "r05",
     "name": "Greek Salad",
     "timeMinutes": 12,
+    "imageAsset": "assets/images/r05_greek_salad.png",
     "description": "Fresh salad with feta and olives.",
     "ingredients": [
       {
@@ -197,6 +199,7 @@
     "id": "r06",
     "name": "Omelette with Cheese",
     "timeMinutes": 10,
+    "imageAsset": "assets/images/r06_omelette_with_cheese.png",
     "description": "Fluffy omelette with melted cheese.",
     "ingredients": [
       {
@@ -230,6 +233,7 @@
     "id": "r07",
     "name": "Tuna Sandwich",
     "timeMinutes": 8,
+    "imageAsset": "assets/images/r07_tuna_sandwich.png",
     "description": "Quick tuna mayo sandwich.",
     "ingredients": [
       {
@@ -262,6 +266,7 @@
     "id": "r08",
     "name": "Vegetable Soup",
     "timeMinutes": 35,
+    "imageAsset": "assets/images/r08_vegetable_soup.png",
     "description": "Comforting soup with mixed vegetables.",
     "ingredients": [
       {
@@ -303,6 +308,7 @@
     "id": "r09",
     "name": "Beef Tacos",
     "timeMinutes": 25,
+    "imageAsset": "assets/images/r09_beef_tacos.png",
     "description": "Tacos with seasoned beef and toppings.",
     "ingredients": [
       {
@@ -340,6 +346,7 @@
     "id": "r10",
     "name": "Pancakes",
     "timeMinutes": 20,
+    "imageAsset": "assets/images/r10_pancakes.png",
     "description": "Classic fluffy pancakes.",
     "ingredients": [
       {
@@ -377,6 +384,7 @@
     "id": "r11",
     "name": "Caprese Sandwich",
     "timeMinutes": 10,
+    "imageAsset": "assets/images/r11_banana_smoothie.png",
     "description": "Mozzarella-tomato-basil sandwich.",
     "ingredients": [
       {
@@ -413,6 +421,7 @@
     "id": "r12",
     "name": "Fried Rice",
     "timeMinutes": 20,
+    "imageAsset": "assets/images/r12_fried_rice.png",
     "description": "Leftover-friendly fried rice.",
     "ingredients": [
       {
@@ -450,6 +459,7 @@
     "id": "r13",
     "name": "Baked Salmon",
     "timeMinutes": 22,
+    "imageAsset": "assets/images/r13_baked_salmon.png",
     "description": "Oven-baked salmon with lemon.",
     "ingredients": [
       {
@@ -483,6 +493,7 @@
     "id": "r14",
     "name": "Chickpea Curry",
     "timeMinutes": 30,
+    "imageAsset": "assets/images/r14_chickpea_curry.png",
     "description": "Creamy curry with chickpeas.",
     "ingredients": [
       {
@@ -524,6 +535,7 @@
     "id": "r15",
     "name": "Caesar Salad",
     "timeMinutes": 15,
+    "imageAsset": "assets/images/r15_caesar_salad.png",
     "description": "Crisp romaine with creamy dressing.",
     "ingredients": [
       {
@@ -561,6 +573,7 @@
     "id": "r16",
     "name": "Shakshuka",
     "timeMinutes": 28,
+    "imageAsset": "assets/images/r16_chicken_noodle_soup.png",
     "description": "Eggs poached in spiced tomato sauce.",
     "ingredients": [
       {
@@ -598,6 +611,7 @@
     "id": "r17",
     "name": "Banana Smoothie",
     "timeMinutes": 5,
+    "imageAsset": "assets/images/r17_grilled_cheese_sandwich.png",
     "description": "Creamy banana smoothie.",
     "ingredients": [
       {
@@ -630,6 +644,7 @@
     "id": "r18",
     "name": "Potato Wedges",
     "timeMinutes": 35,
+    "imageAsset": "assets/images/r18_quinoa_bowl.png",
     "description": "Crispy oven potato wedges.",
     "ingredients": [
       {
@@ -663,6 +678,7 @@
     "id": "r19",
     "name": "Veggie Wrap",
     "timeMinutes": 12,
+    "imageAsset": "assets/images/r19_veggie_wrap.png",
     "description": "Wrap with hummus and crunchy veggies.",
     "ingredients": [
       {
@@ -699,6 +715,7 @@
     "id": "r20",
     "name": "Lentil Salad",
     "timeMinutes": 20,
+    "imageAsset": "assets/images/r20_mushroom_risotto.png",
     "description": "Protein-rich salad with lentils.",
     "ingredients": [
       {
@@ -739,6 +756,7 @@
     "id": "r21",
     "name": "Mac & Cheese",
     "timeMinutes": 30,
+    "imageAsset": "assets/images/r21_beef_burger.png",
     "description": "Creamy stovetop mac and cheese.",
     "ingredients": [
       {
@@ -776,6 +794,7 @@
     "id": "r22",
     "name": "Pesto Pasta",
     "timeMinutes": 15,
+    "imageAsset": "assets/images/r22_chicken_caesar_wrap.png",
     "description": "Pasta tossed with basil pesto.",
     "ingredients": [
       {
@@ -805,6 +824,7 @@
     "id": "r23",
     "name": "Quinoa Bowl",
     "timeMinutes": 25,
+    "imageAsset": "assets/images/r23_fruit_salad.png",
     "description": "Healthy bowl with quinoa and veggies.",
     "ingredients": [
       {
@@ -846,6 +866,7 @@
     "id": "r24",
     "name": "Bolognese Sauce",
     "timeMinutes": 45,
+    "imageAsset": "assets/images/r24_pesto_pasta.png",
     "description": "Rich meat sauce for pasta.",
     "ingredients": [
       {
@@ -887,6 +908,7 @@
     "id": "r25",
     "name": "Chicken Salad",
     "timeMinutes": 15,
+    "imageAsset": "assets/images/r25_turkey_chili.png",
     "description": "Light chicken salad with yogurt dressing.",
     "ingredients": [
       {
@@ -923,6 +945,7 @@
     "id": "r26",
     "name": "Mushroom Risotto",
     "timeMinutes": 40,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Creamy risotto with mushrooms.",
     "ingredients": [
       {
@@ -964,6 +987,7 @@
     "id": "r27",
     "name": "Chili Con Carne",
     "timeMinutes": 50,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Hearty chili with beans and beef.",
     "ingredients": [
       {
@@ -1005,6 +1029,7 @@
     "id": "r28",
     "name": "Hummus Plate",
     "timeMinutes": 10,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Simple hummus snack plate.",
     "ingredients": [
       {
@@ -1037,6 +1062,7 @@
     "id": "r29",
     "name": "Egg Fried Noodles",
     "timeMinutes": 22,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Quick noodles with egg and veggies.",
     "ingredients": [
       {
@@ -1074,6 +1100,7 @@
     "id": "r30",
     "name": "Berry Yogurt Bowl",
     "timeMinutes": 5,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Yogurt bowl with berries.",
     "ingredients": [
       {
@@ -1102,6 +1129,7 @@
     "id": "r31",
     "name": "Grilled Cheese",
     "timeMinutes": 8,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Golden grilled cheese sandwich.",
     "ingredients": [
       {
@@ -1125,6 +1153,7 @@
     "id": "r32",
     "name": "Pumpkin Soup",
     "timeMinutes": 35,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Creamy pumpkin soup.",
     "ingredients": [
       {
@@ -1166,6 +1195,7 @@
     "id": "r33",
     "name": "Couscous Salad",
     "timeMinutes": 15,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Fast couscous salad with herbs.",
     "ingredients": [
       {
@@ -1207,6 +1237,7 @@
     "id": "r34",
     "name": "Baked Oatmeal",
     "timeMinutes": 35,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Warm baked oatmeal breakfast.",
     "ingredients": [
       {
@@ -1243,6 +1274,7 @@
     "id": "r35",
     "name": "Shrimp Pasta",
     "timeMinutes": 20,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Garlic shrimp pasta.",
     "ingredients": [
       {
@@ -1280,6 +1312,7 @@
     "id": "r36",
     "name": "Falafel Bowl",
     "timeMinutes": 25,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Bowl with falafel and salad.",
     "ingredients": [
       {
@@ -1317,6 +1350,7 @@
     "id": "r37",
     "name": "Simple Pizza Toast",
     "timeMinutes": 15,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Toast topped like mini pizza.",
     "ingredients": [
       {
@@ -1346,6 +1380,7 @@
     "id": "r38",
     "name": "Beet Feta Salad",
     "timeMinutes": 15,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Sweet beet salad with feta.",
     "ingredients": [
       {
@@ -1383,6 +1418,7 @@
     "id": "r39",
     "name": "Porridge",
     "timeMinutes": 8,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Classic oatmeal porridge.",
     "ingredients": [
       {
@@ -1415,6 +1451,7 @@
     "id": "r40",
     "name": "Chicken Quesadilla",
     "timeMinutes": 18,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Cheesy quesadilla with chicken.",
     "ingredients": [
       {
@@ -1452,6 +1489,7 @@
     "id": "r41",
     "name": "Rice & Beans Bowl",
     "timeMinutes": 22,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Simple rice bowl with beans.",
     "ingredients": [
       {
@@ -1489,6 +1527,7 @@
     "id": "r42",
     "name": "Cucumber Yogurt Dip",
     "timeMinutes": 8,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Refreshing yogurt dip.",
     "ingredients": [
       {
@@ -1521,6 +1560,7 @@
     "id": "r43",
     "name": "Sausage & Potatoes",
     "timeMinutes": 35,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Pan-roasted sausage with potatoes.",
     "ingredients": [
       {
@@ -1557,6 +1597,7 @@
     "id": "r44",
     "name": "Veggie Pasta Bake",
     "timeMinutes": 40,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Baked pasta with vegetables and cheese.",
     "ingredients": [
       {
@@ -1594,6 +1635,7 @@
     "id": "r45",
     "name": "Apple Cinnamon Yogurt",
     "timeMinutes": 5,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Quick sweet yogurt snack.",
     "ingredients": [
       {
@@ -1621,6 +1663,7 @@
     "id": "r46",
     "name": "Garlic Butter Green Beans",
     "timeMinutes": 12,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Simple side dish green beans.",
     "ingredients": [
       {
@@ -1657,6 +1700,7 @@
     "id": "r47",
     "name": "Tomato Egg Rice",
     "timeMinutes": 18,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Comfort rice with tomato and egg.",
     "ingredients": [
       {
@@ -1690,6 +1734,7 @@
     "id": "r48",
     "name": "Baked Chicken Thighs",
     "timeMinutes": 35,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Juicy baked chicken thighs.",
     "ingredients": [
       {
@@ -1722,6 +1767,7 @@
     "id": "r49",
     "name": "Peanut Butter Banana Toast",
     "timeMinutes": 7,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Sweet toast with peanut butter and banana.",
     "ingredients": [
       {
@@ -1745,6 +1791,7 @@
     "id": "r50",
     "name": "Simple Lentil Stew",
     "timeMinutes": 45,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Hearty lentil stew with vegetables.",
     "ingredients": [
       {
