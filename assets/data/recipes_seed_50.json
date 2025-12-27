@@ -42,6 +42,7 @@
     "id": "r02",
     "name": "Chicken Stir-Fry",
     "timeMinutes": 25,
+    "imageAsset": "assets/images/r02_chicken_stir_fry.png",
     "description": "Quick stir-fry with vegetables and soy sauce.",
     "ingredients": [
       {
@@ -117,6 +118,7 @@
     "id": "r04",
     "name": "Tomato Basil Pasta",
     "timeMinutes": 18,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
     "description": "Simple tomato pasta with basil.",
     "ingredients": [
       {
