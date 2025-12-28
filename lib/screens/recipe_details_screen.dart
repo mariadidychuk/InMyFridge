@@ -1,14 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/recipe.dart';
 
-/// Recipe Details screen:
-/// - Keep original typography (same font sizes/weights as your code)
-/// - Ingredients card EXACT like reference (beige header + white rows + border)
-/// - Ingredient icon tiles (from assets/icons/ingredients)
-/// - NO missing / NO red / NO X
-/// - salt/pepper/water are displayed normally
-/// - Steps are rendered as "Step 1/2/3"
+/// Recipe Details screen
 class RecipeDetailsScreen extends StatefulWidget {
   final Recipe recipe;
 
@@ -30,21 +25,94 @@ class RecipeDetailsScreen extends StatefulWidget {
 class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
   late final Box<String> _favoritesBox;
 
+  // App accent (your beige/orange)
+  static const Color _accent = Color(0xFFD87C5A);
+
   @override
   void initState() {
     super.initState();
     _favoritesBox = Hive.box<String>('favoritesBox');
   }
 
-  bool get _isBookmarked => _favoritesBox.containsKey(widget.recipe.id);
+  bool get _isSaved => _favoritesBox.containsKey(widget.recipe.id);
 
-  Future<void> _toggleBookmark() async {
-    if (_isBookmarked) {
+  Future<void> _toggleSave() async {
+    if (_isSaved) {
       await _favoritesBox.delete(widget.recipe.id);
     } else {
       await _favoritesBox.put(widget.recipe.id, widget.recipe.id);
     }
-    setState(() {});
+    if (mounted) setState(() {});
+  }
+
+  /// Stores planned recipes by day:
+  /// key = "yyyy-mm-dd"
+  /// value = JSON encoded List<String> of recipeIds
+  Future<void> _planRecipeForDay(DateTime day) async {
+    final calendarBox = Hive.box<String>('calendarBox');
+
+    final dateKey =
+        '${day.year.toString().padLeft(4, '0')}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+
+    final raw = calendarBox.get(dateKey);
+    final List<dynamic> list =
+        raw == null ? <dynamic>[] : (jsonDecode(raw) as List<dynamic>);
+
+    final ids = list.map((e) => e.toString()).toList();
+
+    if (!ids.contains(widget.recipe.id)) {
+      ids.add(widget.recipe.id);
+      await calendarBox.put(dateKey, jsonEncode(ids));
+    }
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Planned for $dateKey'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  /// Opens a date picker and schedules the recipe for the selected day.
+  /// DatePicker is themed LIGHT (beige background + accent highlights).
+  Future<void> _openPlanPicker() async {
+    final now = DateTime.now();
+
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(now.year, now.month, now.day),
+      lastDate: DateTime(now.year + 2),
+
+      // ✅ make it lighter (like your screenshot request)
+      builder: (context, child) {
+        final base = Theme.of(context);
+        return Theme(
+          data: base.copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: _accent,                 // selected day circle
+              onPrimary: Colors.white,          // text on selected day
+              surface: Color(0xFFFFF6F2),       // dialog background
+              onSurface: Colors.black87,        // text
+            ),
+            dialogBackgroundColor: const Color(0xFFFFF6F2),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: _accent,       // OK / Cancel
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      await _planRecipeForDay(picked);
+    }
   }
 
   @override
@@ -63,16 +131,6 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          IconButton(
-            tooltip: _isBookmarked ? 'Remove bookmark' : 'Add bookmark',
-            icon: Icon(
-              _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-              color: _isBookmarked ? const Color(0xFFD87C5A) : null,
-            ),
-            onPressed: _toggleBookmark,
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
@@ -84,6 +142,41 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
               imageUrl: recipe.imageUrl,
               radius: cardRadius,
             ),
+
+            // Save + Plan pills under the header image (both white, same accent color)
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: _PillButton(
+                    icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
+                    text: _isSaved ? 'Saved' : 'Save',
+                    borderColor: _accent,
+                    textColor: _accent,
+                    backgroundColor: Colors.white,
+                    onTap: _toggleSave,
+                    trailing: Icon(Icons.more_horiz, size: 20, color: _accent),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: _PillButton(
+                    icon: Icons.calendar_month,
+                    text: 'Plan recipe',
+                    borderColor: _accent,          // ✅ same as Save
+                    textColor: _accent,            // ✅ same as Save
+                    backgroundColor: Colors.white, // ✅ white bg
+                    onTap: _openPlanPicker,
+                    trailing: Icon(Icons.add, size: 20, color: _accent),
+                  ),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
@@ -101,25 +194,24 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title 
-                 Text(
-                   recipe.name,
-                   maxLines: 1,
-                   overflow: TextOverflow.ellipsis,
-                   softWrap: false,
-                   style: const TextStyle(
-                   fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
-                     ),
-                     ),
+                  // Title
+                  Text(
+                    recipe.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      height: 1.1,
+                    ),
+                  ),
                   const SizedBox(height: 8),
 
-                  // Time
+                  // Time (✅ fixed layout: icon + text on same row)
                   Row(
                     children: [
-                      const Icon(Icons.schedule, size: 18, color: Color (0xFFD8CFC7),
-                      ),
+                      const Icon(Icons.schedule, size: 18, color: Color(0xFFD8CFC7)),
                       const SizedBox(width: 6),
                       Text(
                         '${recipe.timeMinutes} min',
@@ -134,16 +226,13 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                     recipe.description,
                     style: const TextStyle(fontSize: 13, height: 1.35),
                   ),
-
                   const SizedBox(height: 18),
 
-                  
                   _IngredientsCardExactLikeReference(
                     ingredients: recipe.ingredients,
                   ),
 
                   const SizedBox(height: 18),
-
                   const Text(
                     'Instructions:',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
@@ -197,13 +286,67 @@ class _HeaderImage extends StatelessWidget {
   }
 }
 
-/// - Amount column not pinned hard right 
+/// Rounded "pill" button like the reference UI.
+class _PillButton extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color borderColor;
+  final Color textColor;
+  final Color backgroundColor;
+  final VoidCallback onTap;
+  final Widget? trailing;
+
+  const _PillButton({
+    required this.icon,
+    required this.text,
+    required this.borderColor,
+    required this.textColor,
+    required this.backgroundColor,
+    required this.onTap,
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(28),
+      child: Container(
+        height: 52,
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: borderColor.withOpacity(0.60), width: 1.6),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: textColor),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: textColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            if (trailing != null) trailing!,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Ingredients card (unchanged)
 class _IngredientsCardExactLikeReference extends StatelessWidget {
   final List<RecipeIngredient> ingredients;
 
-  const _IngredientsCardExactLikeReference({
-    required this.ingredients,
-  });
+  const _IngredientsCardExactLikeReference({required this.ingredients});
 
   String _normalize(String s) => s.trim().toLowerCase();
 
@@ -228,11 +371,10 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Reference-like palette
-    const border = Color(0x22_000000);
+    const border = Color(0x22000000);
     const headerBg = Color(0xFFFBF6F2);
     const rowBg = Colors.white;
-    const divider = Color(0x14_000000);
+    const divider = Color(0x14000000);
     const iconTileBg = Color(0xFFFDF9F7);
 
     return ClipRRect(
@@ -244,13 +386,11 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // HEADER (beige)
             Container(
               color: headerBg,
               padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
               child: LayoutBuilder(
                 builder: (context, c) {
-                  // Amount is slightly towards center
                   final amountW = c.maxWidth * 0.36;
                   final leftW = c.maxWidth - amountW;
 
@@ -275,8 +415,6 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
                 },
               ),
             ),
-
-            // ROWS (white)
             Container(
               color: rowBg,
               padding: const EdgeInsets.fromLTRB(18, 2, 18, 10),
@@ -293,14 +431,13 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           child: Row(
                             children: [
-                              // Icon tile
                               Container(
                                 width: 34,
                                 height: 34,
                                 decoration: BoxDecoration(
                                   color: iconTileBg,
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: const Color(0x11_000000)),
+                                  border: Border.all(color: const Color(0x11000000)),
                                 ),
                                 child: Center(
                                   child: Builder(
@@ -315,18 +452,14 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 14),
-
-                              // Name 
                               SizedBox(
-                                width: leftW - 48, // icon + spacing
+                                width: leftW - 48,
                                 child: Text(
                                   ingredients[i].name,
                                   style: const TextStyle(fontSize: 13),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-
-                              // Amount
                               SizedBox(
                                 width: amountW,
                                 child: Text(
@@ -350,7 +483,6 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
   }
 }
 
-/// Steps list as "Step 1/2/3". 
 class _StepsNumbered extends StatelessWidget {
   final List<String> steps;
 
