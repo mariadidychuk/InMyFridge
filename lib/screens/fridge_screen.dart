@@ -208,7 +208,8 @@ class _FridgeScreenState extends State<FridgeScreen> {
     for (var i = 0; i < box.length; i++) {
       entries.add(MapEntry(i, box.getAt(i) ?? ''));
     }
-    entries.sort((a, b) => a.value.toLowerCase().compareTo(b.value.toLowerCase()));
+    entries
+        .sort((a, b) => a.value.toLowerCase().compareTo(b.value.toLowerCase()));
     return entries;
   }
 
@@ -231,6 +232,7 @@ class _FridgeScreenState extends State<FridgeScreen> {
             ),
             const SizedBox(height: 10),
 
+            // ✅ FIX: limit suggestions height to avoid overflow + allow scroll
             _SuggestionList(
               suggestions: _filteredSuggestions(_search.text),
               alreadyAdded: _alreadyAdded,
@@ -321,7 +323,8 @@ class _SearchField extends StatelessWidget {
         prefixIcon: const Icon(Icons.search),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
@@ -355,31 +358,36 @@ class _SuggestionList extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4)),
+          BoxShadow(
+              color: Color(0x14000000),
+              blurRadius: 12,
+              offset: Offset(0, 4)),
         ],
       ),
-      child: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        itemCount: suggestions.length,
-        separatorBuilder: (_, __) => const Divider(height: 1),
-        itemBuilder: (context, i) {
-          final name = suggestions[i];
-          final exists = alreadyAdded(name);
+      // ✅ FIX: cap height + make list scrollable
+      child: SizedBox(
+        height: 220,
+        child: ListView.separated(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          itemCount: suggestions.length,
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          itemBuilder: (context, i) {
+            final name = suggestions[i];
+            final exists = alreadyAdded(name);
 
-          return ListTile(
-            dense: true,
-            onTap: () => exists ? onTapTrash(name) : onTapRow(name),
-            leading: IconButton(
-              icon: Icon(exists ? Icons.delete_outline : Icons.add),
-              color: exists ? Colors.redAccent : _accent,
-              onPressed: () => exists ? onTapTrash(name) : onTapPlus(name),
-              tooltip: exists ? 'Remove' : 'Add',
-            ),
-            title: Text(name),
-          );
-        },
+            return ListTile(
+              dense: true,
+              onTap: () => exists ? onTapTrash(name) : onTapRow(name),
+              leading: IconButton(
+                icon: Icon(exists ? Icons.delete_outline : Icons.add),
+                color: exists ? Colors.redAccent : _accent,
+                onPressed: () => exists ? onTapTrash(name) : onTapPlus(name),
+                tooltip: exists ? 'Remove' : 'Add',
+              ),
+              title: Text(name),
+            );
+          },
+        ),
       ),
     );
   }
@@ -396,7 +404,10 @@ class _AssumptionChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4))],
+        boxShadow: const [
+          BoxShadow(
+              color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4))
+        ],
       ),
       child: Row(
         children: [
@@ -443,7 +454,10 @@ class _AvailableIngredientsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4))],
+        boxShadow: const [
+          BoxShadow(
+              color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4))
+        ],
       ),
       child: Column(
         children: [
