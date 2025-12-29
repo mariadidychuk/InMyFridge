@@ -45,8 +45,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
     super.initState();
     _ingredientsBox = Hive.box<String>('ingredientsBox');
     _recipesBox = Hive.box<String>('recipesBox');
-
-    // Seeding should happen once in main.dart via seedRecipesIfEmpty(recipesBox).
   }
 
   @override
@@ -93,7 +91,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
       final nameLower = _normalize(ing.name);
       if (nameLower.isEmpty) continue;
 
-      // Ignore for matching logic
       if (_ignored.contains(nameLower)) continue;
 
       if (userIngredientsLower.contains(nameLower)) {
@@ -114,7 +111,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
     final user = _userIngredientsLower();
     final all = _loadAllRecipes();
 
-    final matches = all.map((r) => _matchRecipe(r, user)).toList();
+    var matches = all.map((r) => _matchRecipe(r, user)).toList();
 
     if (!widget.filterByFridge) {
       // "All Recipes": alphabetical by name.
@@ -123,6 +120,10 @@ class _RecipesScreenState extends State<RecipesScreen> {
       );
       return matches;
     }
+
+    // ✅ NEW: In "Recipes for you" mode show only recipes
+    // that match at least ONE ingredient from the fridge.
+    matches = matches.where((m) => m.have.isNotEmpty).toList();
 
     // "Recipes for you": sort by match quality.
     matches.sort((a, b) {
@@ -199,10 +200,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-
-        // Listen to both boxes:
-        // - recipesBox (seed/write changes)
-        // - ingredientsBox (fridge changes affecting matching and sorting)
         child: ValueListenableBuilder(
           valueListenable: _recipesBox.listenable(),
           builder: (context, Box<String> __, ___) {
@@ -228,7 +225,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
                   children: [
                     _searchBar(),
                     const SizedBox(height: 14),
-
                     if (shown.isEmpty)
                       const Text('No matches.', style: TextStyle(color: Colors.black54))
                     else
@@ -269,11 +265,10 @@ class _RecipesScreenState extends State<RecipesScreen> {
   }
 }
 
-/// Recipe match info used for UI.
 class _RecipeMatch {
   final Recipe recipe;
-  final List<String> have; // lowercased
-  final List<String> missing; // lowercased
+  final List<String> have;
+  final List<String> missing;
 
   _RecipeMatch({
     required this.recipe,
@@ -282,16 +277,9 @@ class _RecipeMatch {
   });
 }
 
-/// Row-tile style like the reference:
-/// - Leading: recipe thumbnail (asset/url)
-/// - Title: recipe name
-/// - NO time row (removed)
-/// - Optional: matching UI only in "Recipes for you" mode
 class _RecipeRowTile extends StatelessWidget {
   final _RecipeMatch match;
   final VoidCallback onTap;
-
-  /// When false (All Recipes), matching info is hidden completely.
   final bool showMatchingUI;
 
   const _RecipeRowTile({
@@ -312,7 +300,6 @@ class _RecipeRowTile extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(cardRadius),
       child: Container(
-        // Slightly tighter + more "row tile" feeling
         padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -326,10 +313,8 @@ class _RecipeRowTile extends StatelessWidget {
           ],
         ),
         child: Row(
-          // Center aligns like the reference list
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Wider thumbnail, and no crop (contain)
             _RecipeThumb(
               imageAsset: match.recipe.imageAsset,
               imageUrl: match.recipe.imageUrl,
@@ -338,7 +323,6 @@ class _RecipeRowTile extends StatelessWidget {
               radius: 12,
             ),
             const SizedBox(width: 12),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,8 +337,6 @@ class _RecipeRowTile extends StatelessWidget {
                       height: 1.1,
                     ),
                   ),
-
-                  // Matching UI only for "Recipes for you"
                   if (showMatchingUI) ...[
                     const SizedBox(height: 10),
                     if (total > 0)
@@ -363,7 +345,6 @@ class _RecipeRowTile extends StatelessWidget {
                         style: const TextStyle(fontSize: 12, color: Colors.black87),
                       ),
                     const SizedBox(height: 6),
-
                     if (match.missing.isNotEmpty) ...[
                       const Text(
                         'Missing:',
@@ -379,7 +360,6 @@ class _RecipeRowTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                     ],
-
                     if (match.have.isNotEmpty) ...[
                       const Text(
                         'You have:',
@@ -405,11 +385,6 @@ class _RecipeRowTile extends StatelessWidget {
   }
 }
 
-/// Thumbnail that supports asset or network image and falls back to a placeholder.
-/// IMPORTANT changes:
-/// - width/height instead of square size
-/// - fit: BoxFit.contain (no cropping)
-/// - subtle background like the reference
 class _RecipeThumb extends StatelessWidget {
   final String? imageAsset;
   final String? imageUrl;
@@ -434,13 +409,13 @@ class _RecipeThumb extends StatelessWidget {
     if (hasAsset) {
       image = Image.asset(
         imageAsset!,
-        fit: BoxFit.contain, // no crop
+        fit: BoxFit.contain,
         errorBuilder: (_, __, ___) => _placeholder(),
       );
     } else if (hasUrl) {
       image = Image.network(
         imageUrl!,
-        fit: BoxFit.contain, // no crop
+        fit: BoxFit.contain,
         errorBuilder: (_, __, ___) => _placeholder(),
       );
     } else {
@@ -460,11 +435,7 @@ class _RecipeThumb extends StatelessWidget {
   }
 
   Widget _placeholder() {
-    return const Icon(
-      Icons.image_outlined,
-      size: 20,
-      color: Colors.black38,
-    );
+    return const Icon(Icons.image_outlined, size: 20, color: Colors.black38);
   }
 }
 

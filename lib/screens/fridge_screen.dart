@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'recipes_screen.dart';
@@ -10,6 +11,7 @@ const _muted = Color(0xFF8C8C8C);
 /// Hive box names
 const _ingredientsBoxName = 'ingredientsBox';
 const _uiBoxName = 'uiBox'; // stores small UI flags, e.g., 'assumptionDismissed'
+const _recipesBoxName = 'recipesBox'; // used to build ingredient suggestions
 
 class FridgeScreen extends StatefulWidget {
   const FridgeScreen({super.key});
@@ -20,6 +22,7 @@ class FridgeScreen extends StatefulWidget {
 
 class _FridgeScreenState extends State<FridgeScreen> {
   late final Box<String> _ingredientsBox;
+  late final Box<String> _recipesBox;
   Box? _uiBox;
 
   final TextEditingController _search = TextEditingController();
@@ -29,42 +32,80 @@ class _FridgeScreenState extends State<FridgeScreen> {
   bool _editMode = false;
   final Set<int> _selectedIndexes = <int>{};
 
-  // NOTE: Placeholder dictionary for suggestions.
-  // Later you can generate it from recipes data and cache in Hive.
-  static const List<String> _ingredientDictionary = [
-    'butter',
-    'buttermilk',
-    'peanut butter',
-    'banana',
-    'basil',
-    'beef',
-    'bread',
-    'broccoli',
-    'milk',
-    'potato',
-    'pepper',
-    'salt',
-    'water',
-  ];
+  // Dictionary for suggestions built from recipesBox (not hardcoded)
+  List<String> _ingredientDictionary = const [];
 
   @override
   void initState() {
     super.initState();
     _ingredientsBox = Hive.box<String>(_ingredientsBoxName);
-    _openUiBox();
-  }
+    _recipesBox = Hive.box<String>(_recipesBoxName);
 
-  Future<void> _openUiBox() async {
-    _uiBox = await Hive.openBox(_uiBoxName);
-    setState(() {
-      _assumptionDismissed = _uiBox?.get('assumptionDismissed', defaultValue: false) == true;
-    });
+    _openUiBox();
+
+    // Build once
+    _rebuildIngredientDictionary();
+
+    // Rebuild when recipesBox changes (NO setState during build)
+    _recipesBox.listenable().addListener(_onRecipesBoxChanged);
   }
 
   @override
   void dispose() {
+    _recipesBox.listenable().removeListener(_onRecipesBoxChanged);
     _search.dispose();
     super.dispose();
+  }
+
+  Future<void> _openUiBox() async {
+    _uiBox = await Hive.openBox(_uiBoxName);
+    if (!mounted) return;
+    setState(() {
+      _assumptionDismissed =
+          _uiBox?.get('assumptionDismissed', defaultValue: false) == true;
+    });
+  }
+
+  void _onRecipesBoxChanged() {
+    _rebuildIngredientDictionary();
+  }
+
+  String _normalize(String s) => s.trim().toLowerCase();
+
+  void _rebuildIngredientDictionary() {
+    final set = <String>{};
+
+    for (final raw in _recipesBox.values) {
+      if (raw.trim().isEmpty) continue;
+
+      final map = jsonDecode(raw) as Map<String, dynamic>;
+      final ingredients = (map['ingredients'] as List?) ?? const [];
+
+      for (final ing in ingredients) {
+        if (ing is! Map) continue;
+        final name = ing['name']?.toString() ?? '';
+        final n = _normalize(name);
+        if (n.isEmpty) continue;
+        set.add(n);
+      }
+    }
+
+    final list = set.toList()..sort();
+
+    // Avoid unnecessary rebuilds
+    if (_ingredientDictionary.length == list.length) {
+      var same = true;
+      for (var i = 0; i < list.length; i++) {
+        if (_ingredientDictionary[i] != list[i]) {
+          same = false;
+          break;
+        }
+      }
+      if (same) return;
+    }
+
+    if (!mounted) return;
+    setState(() => _ingredientDictionary = list);
   }
 
   // ---------- Suggestions logic ----------
@@ -96,7 +137,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
   }
 
   bool _alreadyAdded(String name) {
-    // case-insensitive contains check
     final lower = name.toLowerCase();
     for (var i = 0; i < _ingredientsBox.length; i++) {
       final v = _ingredientsBox.getAt(i) ?? '';
@@ -107,10 +147,10 @@ class _FridgeScreenState extends State<FridgeScreen> {
 
   void _addIngredient(String name) {
     if (name.trim().isEmpty) return;
-    if (_alreadyAdded(name)) return; // duplicates not allowed
+    if (_alreadyAdded(name)) return;
     _ingredientsBox.add(name.trim());
     _search.clear();
-    setState(() {}); // rebuild to refresh suggestions
+    setState(() {});
   }
 
   void _removeIngredientByName(String name) {
@@ -144,7 +184,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
   }
 
   void _deleteSelected() {
-    // Delete from the end to keep indexes valid
     final toDelete = _selectedIndexes.toList()..sort((a, b) => b.compareTo(a));
     for (final i in toDelete) {
       _ingredientsBox.deleteAt(i);
@@ -164,8 +203,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
   }
 
   // ---------- UI helpers ----------
-
-  /// Returns an alphabetically sorted list of current ingredients.
   List<MapEntry<int, String>> _sortedEntries(Box<String> box) {
     final entries = <MapEntry<int, String>>[];
     for (var i = 0; i < box.length; i++) {
@@ -183,30 +220,27 @@ class _FridgeScreenState extends State<FridgeScreen> {
         title: const Text('Fridge'),
         backgroundColor: _bg,
         elevation: 0,
-        actions: [
-          // Edit / Delete actions reside inside the Available Ingredients card
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // ---------- Search + suggestions ----------
             _SearchField(
               controller: _search,
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: 10),
+
             _SuggestionList(
               suggestions: _filteredSuggestions(_search.text),
               alreadyAdded: _alreadyAdded,
-              onTapRow: _addIngredient, // add when tapping row
-              onTapPlus: _addIngredient, // add when tapping leading "+"
-              onTapTrash: _removeIngredientByName, // remove when already exists
+              onTapRow: _addIngredient,
+              onTapPlus: _addIngredient,
+              onTapTrash: _removeIngredientByName,
             ),
+
             const SizedBox(height: 12),
 
-            // ---------- Assumption chip ----------
             if (!_assumptionDismissed)
               _AssumptionChip(
                 onClose: () {
@@ -217,7 +251,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
 
             const SizedBox(height: 12),
 
-            // ---------- Available ingredients block ----------
             Expanded(
               child: ValueListenableBuilder(
                 valueListenable: _ingredientsBox.listenable(),
@@ -236,7 +269,6 @@ class _FridgeScreenState extends State<FridgeScreen> {
               ),
             ),
 
-            // ---------- See Recipes ----------
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: SizedBox(
@@ -244,11 +276,10 @@ class _FridgeScreenState extends State<FridgeScreen> {
                 height: 48,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to Recipes; Recipes will read from ingredientsBox
                     Navigator.of(context).push(
-                     MaterialPageRoute(
-                       builder: (_) => const RecipesScreen(filterByFridge: true),
-                     ),
+                      MaterialPageRoute(
+                        builder: (_) => const RecipesScreen(filterByFridge: true),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -317,9 +348,8 @@ class _SuggestionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (suggestions.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    if (suggestions.isEmpty) return const SizedBox.shrink();
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -337,9 +367,10 @@ class _SuggestionList extends StatelessWidget {
         itemBuilder: (context, i) {
           final name = suggestions[i];
           final exists = alreadyAdded(name);
+
           return ListTile(
             dense: true,
-            onTap: () => exists ? onTapTrash(name) : onTapRow(name), // add by tapping row; delete if exists
+            onTap: () => exists ? onTapTrash(name) : onTapRow(name),
             leading: IconButton(
               icon: Icon(exists ? Icons.delete_outline : Icons.add),
               color: exists ? Colors.redAccent : _accent,
@@ -416,7 +447,6 @@ class _AvailableIngredientsCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Header row: title + actions
           Row(
             children: [
               const Expanded(
@@ -437,8 +467,6 @@ class _AvailableIngredientsCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 6),
-
-          // Items list
           Expanded(
             child: entries.isEmpty
                 ? const Center(child: Text('No ingredients yet'))
@@ -449,7 +477,6 @@ class _AvailableIngredientsCard extends StatelessWidget {
                       final name = entries[i].value;
 
                       if (!editMode) {
-                        // Read-only row with bullet
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: Row(
@@ -461,7 +488,6 @@ class _AvailableIngredientsCard extends StatelessWidget {
                         );
                       }
 
-                      // Edit mode row with selectable circle
                       final isSel = selected.contains(idx);
                       return InkWell(
                         onTap: () => onToggleSelect(idx),
@@ -469,7 +495,6 @@ class _AvailableIngredientsCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: Row(
                             children: [
-                              // Circle checkbox style
                               Container(
                                 width: 22,
                                 height: 22,
@@ -479,7 +504,8 @@ class _AvailableIngredientsCard extends StatelessWidget {
                                   color: isSel ? _accent : Colors.white,
                                 ),
                                 child: isSel
-                                    ? const Icon(Icons.check, size: 16, color: Colors.white)
+                                    ? const Icon(Icons.check,
+                                        size: 16, color: Colors.white)
                                     : null,
                               ),
                               const SizedBox(width: 10),
@@ -496,4 +522,3 @@ class _AvailableIngredientsCard extends StatelessWidget {
     );
   }
 }
-
