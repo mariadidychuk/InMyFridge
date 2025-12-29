@@ -86,22 +86,20 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
       initialDate: now,
       firstDate: DateTime(now.year, now.month, now.day),
       lastDate: DateTime(now.year + 2),
-
-      // ✅ make it lighter (like your screenshot request)
       builder: (context, child) {
         final base = Theme.of(context);
         return Theme(
           data: base.copyWith(
             colorScheme: const ColorScheme.light(
-              primary: _accent,                 // selected day circle
-              onPrimary: Colors.white,          // text on selected day
-              surface: Color(0xFFFFF6F2),       // dialog background
-              onSurface: Colors.black87,        // text
+              primary: _accent, // selected day circle
+              onPrimary: Colors.white,
+              surface: Color(0xFFFFF6F2), // dialog background
+              onSurface: Colors.black87,
             ),
             dialogBackgroundColor: const Color(0xFFFFF6F2),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: _accent,       // OK / Cancel
+                foregroundColor: _accent,
               ),
             ),
           ),
@@ -127,10 +125,33 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
       appBar: AppBar(
         backgroundColor: bg,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black87),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+           // Calendar icon
+          IconButton(
+            tooltip: 'Plan recipe',
+            onPressed: _openPlanPicker,
+            icon: const Icon(
+              Icons.calendar_month,
+              color: _accent,
+            ),
+          ),
+          
+          // Bookmark icon
+          IconButton(
+            tooltip: _isSaved ? 'Remove bookmark' : 'Save',
+            onPressed: _toggleSave,
+            icon: Icon(
+              _isSaved ? Icons.bookmark : Icons.bookmark_border,
+              color: _accent,
+            ),
+          ),
+          const SizedBox(width: 6),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
@@ -143,41 +164,8 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
               radius: cardRadius,
             ),
 
-            // Save + Plan pills under the header image (both white, same accent color)
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _PillButton(
-                    icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
-                    text: _isSaved ? 'Saved' : 'Save',
-                    borderColor: _accent,
-                    textColor: _accent,
-                    backgroundColor: Colors.white,
-                    onTap: _toggleSave,
-                    trailing: Icon(Icons.more_horiz, size: 20, color: _accent),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: _PillButton(
-                    icon: Icons.calendar_month,
-                    text: 'Plan recipe',
-                    borderColor: _accent,          // ✅ same as Save
-                    textColor: _accent,            // ✅ same as Save
-                    backgroundColor: Colors.white, // ✅ white bg
-                    onTap: _openPlanPicker,
-                    trailing: Icon(Icons.add, size: 20, color: _accent),
-                  ),
-                ),
-              ],
-            ),
 
-            const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
               decoration: BoxDecoration(
@@ -194,7 +182,6 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   Text(
                     recipe.name,
                     maxLines: 1,
@@ -208,20 +195,20 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
                   ),
                   const SizedBox(height: 8),
 
-                  // Time (✅ fixed layout: icon + text on same row)
                   Row(
                     children: [
-                      const Icon(Icons.schedule, size: 18, color: Color(0xFFD8CFC7)),
+                      const Icon(Icons.schedule,
+                          size: 18, color: Color(0xFFD8CFC7)),
                       const SizedBox(width: 6),
                       Text(
                         '${recipe.timeMinutes} min',
-                        style: const TextStyle(fontSize: 13, color: Colors.black54),
+                        style: const TextStyle(
+                            fontSize: 13, color: Colors.black54),
                       ),
                     ],
                   ),
                   const SizedBox(height: 10),
 
-                  // Description
                   Text(
                     recipe.description,
                     style: const TextStyle(fontSize: 13, height: 1.35),
@@ -278,65 +265,10 @@ class _HeaderImage extends StatelessWidget {
                 : Container(
                     color: const Color(0xFFEFE7E3),
                     child: const Center(
-                      child: Icon(Icons.image_outlined, size: 42, color: Colors.black38),
+                      child: Icon(Icons.image_outlined,
+                          size: 42, color: Colors.black38),
                     ),
                   ),
-      ),
-    );
-  }
-}
-
-/// Rounded "pill" button like the reference UI.
-class _PillButton extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final Color borderColor;
-  final Color textColor;
-  final Color backgroundColor;
-  final VoidCallback onTap;
-  final Widget? trailing;
-
-  const _PillButton({
-    required this.icon,
-    required this.text,
-    required this.borderColor,
-    required this.textColor,
-    required this.backgroundColor,
-    required this.onTap,
-    this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(28),
-      child: Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: borderColor.withOpacity(0.60), width: 1.6),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: textColor),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: textColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            if (trailing != null) trailing!,
-          ],
-        ),
       ),
     );
   }
@@ -400,14 +332,16 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
                         width: leftW,
                         child: const Text(
                           'Ingredients',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w700),
                         ),
                       ),
                       SizedBox(
                         width: amountW,
                         child: const Text(
                           'Amount',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w700),
                         ),
                       ),
                     ],
@@ -437,16 +371,20 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: iconTileBg,
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: const Color(0x11000000)),
+                                  border: Border.all(
+                                      color: const Color(0x11000000)),
                                 ),
                                 child: Center(
                                   child: Builder(
                                     builder: (_) {
-                                      final iconPath = _iconFor(ingredients[i].name);
+                                      final iconPath =
+                                          _iconFor(ingredients[i].name);
                                       return iconPath != null
-                                          ? Image.asset(iconPath, width: 18, height: 18)
+                                          ? Image.asset(iconPath,
+                                              width: 18, height: 18)
                                           : const Icon(Icons.restaurant,
-                                              size: 18, color: Colors.black45);
+                                              size: 18,
+                                              color: Colors.black45);
                                     },
                                   ),
                                 ),
