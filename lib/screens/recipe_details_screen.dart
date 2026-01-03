@@ -286,16 +286,138 @@ class _IngredientsCardExactLikeReference extends StatelessWidget {
     final key = _normalize(name);
 
     const map = <String, String>{
-      'spaghetti': 'assets/icons/ingredients/spaghetti.png',
-      'egg': 'assets/icons/ingredients/egg.png',
-      'eggs': 'assets/icons/ingredients/egg.png',
-      'bacon': 'assets/icons/ingredients/bacon.png',
-      'diced bacon': 'assets/icons/ingredients/bacon.png',
-      'parmesan': 'assets/icons/ingredients/cheese.png',
-      'grated parmesan': 'assets/icons/ingredients/cheese.png',
-      'cheese': 'assets/icons/ingredients/cheese.png',
-      'salt': 'assets/icons/ingredients/salt.png',
-      'pepper': 'assets/icons/ingredients/pepper.png',
+        // A
+  'apple': 'assets/icons/ingredients/apple.png',
+  'avocado': 'assets/icons/ingredients/avocado.png',
+
+  // B
+  'bacon': 'assets/icons/ingredients/bacon.png',
+  'baking powder': 'assets/icons/ingredients/baking powder.png',
+  'banana': 'assets/icons/ingredients/banana.png',
+  'basil': 'assets/icons/ingredients/basil.png',
+  'beetroot (cooked)': 'assets/icons/ingredients/beetroot (cooked).png',
+  'berries': 'assets/icons/ingredients/berries.png',
+  'bread': 'assets/icons/ingredients/bread.png',
+  'broccoli': 'assets/icons/ingredients/broccoli.png',
+  'butter': 'assets/icons/ingredients/butter.png',
+
+  // C
+  'caesar dressing': 'assets/icons/ingredients/caesar dressing.png',
+  'carrot': 'assets/icons/ingredients/carrot.png',
+  'celery': 'assets/icons/ingredients/celery.png',
+  'cheddar': 'assets/icons/ingredients/cheddar.png',
+  'cheese': 'assets/icons/ingredients/cheese.png',
+  'cherry tomatoes': 'assets/icons/ingredients/cherry tomatoes.png',
+  'chicken': 'assets/icons/ingredients/chicken.png',
+  'chicken breast': 'assets/icons/ingredients/chicken breast.png',
+  'chicken thighs': 'assets/icons/ingredients/chicken thighs.png',
+  'chickpeas': 'assets/icons/ingredients/chickpeas.png',
+  'chili powder': 'assets/icons/ingredients/chili powder.png',
+  'cinnamon': 'assets/icons/ingredients/cinnamon.png',
+  'coconut milk': 'assets/icons/ingredients/coconut milk.png',
+  'couscous': 'assets/icons/ingredients/couscous.png',
+  'cream': 'assets/icons/ingredients/cream.png',
+  'croutons': 'assets/icons/ingredients/croutons.png',
+  'cucumber': 'assets/icons/ingredients/cucumber.png',
+  'curry powder': 'assets/icons/ingredients/curry powder.png',
+
+  // E
+  'egg': 'assets/icons/ingredients/egg.png',
+  'eggs': 'assets/icons/ingredients/egg.png',
+
+  // F
+  'falafel': 'assets/icons/ingredients/falafel.png',
+  'feta': 'assets/icons/ingredients/feta.png',
+  'flour': 'assets/icons/ingredients/flour.png',
+
+  // G
+  'garlic': 'assets/icons/ingredients/garlic.png',
+  'granola': 'assets/icons/ingredients/granola.png',
+  'green beans': 'assets/icons/ingredients/green beans.png',
+  'ground beef': 'assets/icons/ingredients/ground beef.png',
+
+  // H
+  'honey': 'assets/icons/ingredients/honey.png',
+  'hummus': 'assets/icons/ingredients/hummus.png',
+
+  // K
+  'kidney beans': 'assets/icons/ingredients/kidney beans.png',
+
+  // L
+  'lemon': 'assets/icons/ingredients/lemon.png',
+  'lemon juice': 'assets/icons/ingredients/lemon juice.png',
+  'lentils': 'assets/icons/ingredients/lentils.png',
+  'lentils (cooked)': 'assets/icons/ingredients/lentils (cooked).png',
+  'lettuce': 'assets/icons/ingredients/lettuce.png',
+
+  // M
+  'macaroni': 'assets/icons/ingredients/macaroni.png',
+  'mayonnaise': 'assets/icons/ingredients/mayonnaise.png',
+  'milk': 'assets/icons/ingredients/milk.png',
+  'mozzarella': 'assets/icons/ingredients/mozzarella.png',
+  'mushrooms': 'assets/icons/ingredients/mushrooms.png',
+
+  // N
+  'noodles': 'assets/icons/ingredients/noodles.png',
+
+  // O
+  'oats': 'assets/icons/ingredients/oats.png',
+  'oil': 'assets/icons/ingredients/oil.png',
+  'olive oil': 'assets/icons/ingredients/olive oil.png',
+  'olives': 'assets/icons/ingredients/olives.png',
+  'onion': 'assets/icons/ingredients/onion.png',
+  'oregano': 'assets/icons/ingredients/oregano.png',
+
+  // P
+  'paprika': 'assets/icons/ingredients/paprika.png',
+  'parmesan': 'assets/icons/ingredients/parmesan.png',
+  'pasta': 'assets/icons/ingredients/pasta.png',
+  'peanut butter': 'assets/icons/ingredients/peanut butter.png',
+  'peas': 'assets/icons/ingredients/peas.png',
+  'pepper': 'assets/icons/ingredients/pepper.png',
+  'pesto': 'assets/icons/ingredients/pesto.png',
+  'potatoes': 'assets/icons/ingredients/potatoes.png',
+  'pumpkin': 'assets/icons/ingredients/pumpkin.png',
+
+  // Q
+  'quinoa': 'assets/icons/ingredients/quinoa.png',
+
+  // R
+  'red onion': 'assets/icons/ingredients/red onion.png',
+  'rice (cooked)': 'assets/icons/ingredients/rice (cooked).png',
+  'rice (risotto)': 'assets/icons/ingredients/rice (risotto).png',
+  'romaine': 'assets/icons/ingredients/romaine.png',
+
+  // S
+  'salmon': 'assets/icons/ingredients/salmon.png',
+  'salt': 'assets/icons/ingredients/salt.png',
+  'sausages': 'assets/icons/ingredients/sausages.png',
+  'shrimp': 'assets/icons/ingredients/shrimp.png',
+  'soy sauce': 'assets/icons/ingredients/soy sauce.png',
+  'spaghetti': 'assets/icons/ingredients/spaghetti.png',
+
+  // T
+  'taco shells': 'assets/icons/ingredients/taco shells.png',
+  'tomato': 'assets/icons/ingredients/tomato.png',
+  'tomatoes': 'assets/icons/ingredients/tomatoes.png',
+  'tomato sauce': 'assets/icons/ingredients/tomato sauce.png',
+  'tortilla': 'assets/icons/ingredients/tortilla.png',
+  'tuna': 'assets/icons/ingredients/tuna.png',
+
+  // V
+  'vegetable broth': 'assets/icons/ingredients/vegetable broth.png',
+
+  // W
+  'walnuts': 'assets/icons/ingredients/walnuts.png',
+  'water': 'assets/icons/ingredients/water.png',
+
+  // Y
+  'yogurt': 'assets/icons/ingredients/yogurt.png',
+  'yogurt sauce': 'assets/icons/ingredients/yogurt sauce.png',
+
+  // Z
+  'zucchini': 'assets/icons/ingredients/zucchini.png',
+      
     };
 
     return map[key];
