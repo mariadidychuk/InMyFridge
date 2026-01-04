@@ -1,0 +1,46 @@
+@startuml
+
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+
+package "models" {
+  class Recipe {
+    id
+    name
+    timeMinutes
+    description
+  }
+
+  class RecipeIngredient {
+    name
+    amount
+  }
+
+  Recipe "1" *-- "0..*" RecipeIngredient
+}
+
+package "data (Hive)" {
+  class ingredientsBox
+  class recipesBox
+  class favoritesBox
+}
+
+package "screens" {
+  class AppScaffold
+  class FridgeScreen
+  class RecipesScreen
+  class RecipeDetailsScreen
+  class BookmarksScreen
+  class CalendarScreen
+}
+
+AppScaffold o-- RecipesScreen
+AppScaffold o-- CalendarScreen
+AppScaffold o-- BookmarksScreen
+AppScaffold o-- FridgeScreen
+
+RecipesScreen ..> RecipeDetailsScreen
+BookmarksScreen ..> RecipeDetailsScreen
+FridgeScreen ..> RecipesScreen
+
+@enduml
