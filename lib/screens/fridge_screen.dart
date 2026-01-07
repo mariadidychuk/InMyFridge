@@ -13,6 +13,7 @@ const _ingredientsBoxName = 'ingredientsBox';
 const _uiBoxName = 'uiBox'; // stores small UI flags, e.g., 'assumptionDismissed'
 const _recipesBoxName = 'recipesBox'; // used to build ingredient suggestions
 
+// Stateful screen that manages the fridge ingredients and UI state.
 class FridgeScreen extends StatefulWidget {
   const FridgeScreen({super.key});
 
@@ -20,11 +21,13 @@ class FridgeScreen extends StatefulWidget {
   State<FridgeScreen> createState() => _FridgeScreenState();
 }
 
+
 class _FridgeScreenState extends State<FridgeScreen> {
   late final Box<String> _ingredientsBox;
   late final Box<String> _recipesBox;
   Box? _uiBox;
 
+  // Controls the text input of the search field.
   final TextEditingController _search = TextEditingController();
   bool _assumptionDismissed = false;
 
