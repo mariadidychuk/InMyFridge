@@ -1129,7 +1129,7 @@
     "id": "r31",
     "name": "Grilled Cheese",
     "timeMinutes": 8,
-    "imageAsset": "assets/images/r31_gflutter.png",
+    "imageAsset": "assets/images/r31_rilled_cheese_sandwich.png",
     "description": "Golden grilled cheese sandwich.",
     "ingredients": [
       {
@@ -1627,7 +1627,7 @@
     ],
     "steps": [
       "Cook pasta; drain.",
-      "Mix with tomato sauce and diced zucchini.",
+      "Mix with tomato sauce and diced zucchini.png",
       "Top with mozzarella and bake at 200°C for 20 minutes."
     ]
   },
@@ -1635,7 +1635,7 @@
     "id": "r45",
     "name": "Apple Cinnamon Yogurt",
     "timeMinutes": 5,
-    "imageAsset": "assets/images/r45_apple_cinnamon_yogurtng",
+    "imageAsset": "assets/images/r45_apple_cinnamon_yogurt.png",
     "description": "Quick sweet yogurt snack.",
     "ingredients": [
       {
