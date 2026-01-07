@@ -945,7 +945,7 @@
     "id": "r26",
     "name": "Mushroom Risotto",
     "timeMinutes": 40,
-    "imageAsset": "assets/images/r26_veggie_omelette.png",
+    "imageAsset": "assets/images/r26_mushroom_risotto.png",
     "description": "Creamy risotto with mushrooms.",
     "ingredients": [
       {
@@ -987,7 +987,7 @@
     "id": "r27",
     "name": "Chili Con Carne",
     "timeMinutes": 50,
-    "imageAsset": "assets/images/r27_shrimp_stir_fry.png",
+    "imageAsset": "assets/images/r27_chili_con_carne.png",
     "description": "Hearty chili with beans and beef.",
     "ingredients": [
       {
@@ -1029,7 +1029,7 @@
     "id": "r28",
     "name": "Hummus Plate",
     "timeMinutes": 10,
-    "imageAsset": "assets/images/r28_lentil_soup.png",
+    "imageAsset": "assets/images/r28_hummus_plate.png",
     "description": "Simple hummus snack plate.",
     "ingredients": [
       {
@@ -1062,7 +1062,7 @@
     "id": "r29",
     "name": "Egg Fried Noodles",
     "timeMinutes": 22,
-    "imageAsset": "assets/images/r29_beef_stew.png",
+    "imageAsset": "assets/images/r29_egg_fried_noodles.png",
     "description": "Quick noodles with egg and veggies.",
     "ingredients": [
       {
@@ -1100,7 +1100,7 @@
     "id": "r30",
     "name": "Berry Yogurt Bowl",
     "timeMinutes": 5,
-    "imageAsset": "assets/images/r30_chicken_fajitas.png",
+    "imageAsset": "assets/images/r30_berry_yogurt_bowl.png",
     "description": "Yogurt bowl with berries.",
     "ingredients": [
       {
@@ -1129,7 +1129,7 @@
     "id": "r31",
     "name": "Grilled Cheese",
     "timeMinutes": 8,
-    "imageAsset": "assets/images/r31_grilled_cheese_sandwich.png",
+    "imageAsset": "assets/images/r31_gflutter.png",
     "description": "Golden grilled cheese sandwich.",
     "ingredients": [
       {
@@ -1153,7 +1153,7 @@
     "id": "r32",
     "name": "Pumpkin Soup",
     "timeMinutes": 35,
-    "imageAsset": "assets/images/r32_breakfast_burrito.png",
+    "imageAsset": "assets/images/r32_pumpkin_soup.png",
     "description": "Creamy pumpkin soup.",
     "ingredients": [
       {
@@ -1195,7 +1195,7 @@
     "id": "r33",
     "name": "Couscous Salad",
     "timeMinutes": 15,
-    "imageAsset": "assets/images/r33_garlic_butter_shrimp.png",
+    "imageAsset": "assets/images/r33_couscous_salad.png",
     "description": "Fast couscous salad with herbs.",
     "ingredients": [
       {
@@ -1237,7 +1237,7 @@
     "id": "r34",
     "name": "Baked Oatmeal",
     "timeMinutes": 35,
-    "imageAsset": "assets/images/r34_veggie_pizza.png",
+    "imageAsset": "assets/images/r34_baked_oatmeal.png",
     "description": "Warm baked oatmeal breakfast.",
     "ingredients": [
       {
@@ -1274,7 +1274,7 @@
     "id": "r35",
     "name": "Shrimp Pasta",
     "timeMinutes": 20,
-    "imageAsset": "assets/images/r35_chicken_alfredo.png",
+    "imageAsset": "assets/images/r35_shrimp_pasta.png",
     "description": "Garlic shrimp pasta.",
     "ingredients": [
       {
@@ -1312,7 +1312,7 @@
     "id": "r36",
     "name": "Falafel Bowl",
     "timeMinutes": 25,
-    "imageAsset": "assets/images/r36_beef_meatballs.png",
+    "imageAsset": "assets/images/r36_falafel_bowl.png",
     "description": "Bowl with falafel and salad.",
     "ingredients": [
       {
@@ -1350,7 +1350,7 @@
     "id": "r37",
     "name": "Simple Pizza Toast",
     "timeMinutes": 15,
-    "imageAsset": "assets/images/r37_spinach_salad.png",
+    "imageAsset": "assets/images/r37_simple_pizza_toast.png",
     "description": "Toast topped like mini pizza.",
     "ingredients": [
       {
@@ -1380,7 +1380,7 @@
     "id": "r38",
     "name": "Beet Feta Salad",
     "timeMinutes": 15,
-    "imageAsset": "assets/images/r38_chicken_parmesan.png",
+    "imageAsset": "assets/images/r38_beet_feta_salad.png",
     "description": "Sweet beet salad with feta.",
     "ingredients": [
       {
@@ -1418,7 +1418,7 @@
     "id": "r39",
     "name": "Porridge",
     "timeMinutes": 8,
-    "imageAsset": "assets/images/r39_stuffed_peppers.png",
+    "imageAsset": "assets/images/r39_porridge.png",
     "description": "Classic oatmeal porridge.",
     "ingredients": [
       {
@@ -1451,7 +1451,7 @@
     "id": "r40",
     "name": "Chicken Quesadilla",
     "timeMinutes": 18,
-    "imageAsset": "assets/images/r40_vegetable_stir_fry.png",
+    "imageAsset": "assets/images/r40_chicken_quesadilla.png",
     "description": "Cheesy quesadilla with chicken.",
     "ingredients": [
       {
@@ -1489,7 +1489,7 @@
     "id": "r41",
     "name": "Rice & Beans Bowl",
     "timeMinutes": 22,
-    "imageAsset": "assets/images/r41_chicken_salad.png",
+    "imageAsset": "assets/images/r41_rice_beans_bowl.png",
     "description": "Simple rice bowl with beans.",
     "ingredients": [
       {
@@ -1527,7 +1527,7 @@
     "id": "r42",
     "name": "Cucumber Yogurt Dip",
     "timeMinutes": 8,
-    "imageAsset": "assets/images/r42_fish_tacos.png",
+    "imageAsset": "assets/images/r42_cucumber_yogurt_dip.png",
     "description": "Refreshing yogurt dip.",
     "ingredients": [
       {
@@ -1560,7 +1560,7 @@
     "id": "r43",
     "name": "Sausage & Potatoes",
     "timeMinutes": 35,
-    "imageAsset": "assets/images/r43_veggie_burger.png",
+    "imageAsset": "assets/images/r43_sausage_potatoes.png",
     "description": "Pan-roasted sausage with potatoes.",
     "ingredients": [
       {
@@ -1597,7 +1597,7 @@
     "id": "r44",
     "name": "Veggie Pasta Bake",
     "timeMinutes": 40,
-    "imageAsset": "assets/images/r44_tomato_soup.png",
+    "imageAsset": "assets/images/r44_veggie_pasta_bake.png",
     "description": "Baked pasta with vegetables and cheese.",
     "ingredients": [
       {
@@ -1635,7 +1635,7 @@
     "id": "r45",
     "name": "Apple Cinnamon Yogurt",
     "timeMinutes": 5,
-    "imageAsset": "assets/images/r45_chicken_fried_rice.png",
+    "imageAsset": "assets/images/r45_apple_cinnamon_yogurtng",
     "description": "Quick sweet yogurt snack.",
     "ingredients": [
       {
@@ -1663,7 +1663,7 @@
     "id": "r46",
     "name": "Garlic Butter Green Beans",
     "timeMinutes": 12,
-    "imageAsset": "assets/images/r46_beef_stir_fry.png",
+    "imageAsset": "assets/images/r46_garlic_butter_green_beans.png",
     "description": "Simple side dish green beans.",
     "ingredients": [
       {
@@ -1700,7 +1700,7 @@
     "id": "r47",
     "name": "Tomato Egg Rice",
     "timeMinutes": 18,
-    "imageAsset": "assets/images/r47_pasta_primavera.png",
+    "imageAsset": "assets/images/r47_tomato_egg_rice.png",
     "description": "Comfort rice with tomato and egg.",
     "ingredients": [
       {
@@ -1734,7 +1734,7 @@
     "id": "r48",
     "name": "Baked Chicken Thighs",
     "timeMinutes": 35,
-    "imageAsset": "assets/images/r48_egg_salad_sandwich.png",
+    "imageAsset": "assets/images/r48_baked_chicken_thighs.png",
     "description": "Juicy baked chicken thighs.",
     "ingredients": [
       {
@@ -1767,7 +1767,7 @@
     "id": "r49",
     "name": "Peanut Butter Banana Toast",
     "timeMinutes": 7,
-    "imageAsset": "assets/images/r49_chicken_curry.png",
+    "imageAsset": "assets/images/r49_peanut_butter_banana_toast.png",
     "description": "Sweet toast with peanut butter and banana.",
     "ingredients": [
       {
