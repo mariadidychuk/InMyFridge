@@ -384,7 +384,7 @@
     "id": "r11",
     "name": "Caprese Sandwich",
     "timeMinutes": 10,
-    "imageAsset": "assets/images/r11_banana_smoothie.png",
+    "imageAsset": "assets/images/r11_caprese_sandwich.png",
     "description": "Mozzarella-tomato-basil sandwich.",
     "ingredients": [
       {
@@ -573,7 +573,7 @@
     "id": "r16",
     "name": "Shakshuka",
     "timeMinutes": 28,
-    "imageAsset": "assets/images/r16_chicken_noodle_soup.png",
+    "imageAsset": "assets/images/r16_shakshuka.png",
     "description": "Eggs poached in spiced tomato sauce.",
     "ingredients": [
       {
@@ -611,7 +611,7 @@
     "id": "r17",
     "name": "Banana Smoothie",
     "timeMinutes": 5,
-    "imageAsset": "assets/images/r17_grilled_cheese_sandwich.png",
+    "imageAsset": "assets/images/r17_banana_smoothie.png",
     "description": "Creamy banana smoothie.",
     "ingredients": [
       {
@@ -644,7 +644,7 @@
     "id": "r18",
     "name": "Potato Wedges",
     "timeMinutes": 35,
-    "imageAsset": "assets/images/r18_quinoa_bowl.png",
+    "imageAsset": "assets/images/r18_rpotato_wedges.png",
     "description": "Crispy oven potato wedges.",
     "ingredients": [
       {
@@ -715,7 +715,7 @@
     "id": "r20",
     "name": "Lentil Salad",
     "timeMinutes": 20,
-    "imageAsset": "assets/images/r20_mushroom_risotto.png",
+    "imageAsset": "assets/images/r20_lentil_salad.png",
     "description": "Protein-rich salad with lentils.",
     "ingredients": [
       {
@@ -756,7 +756,7 @@
     "id": "r21",
     "name": "Mac & Cheese",
     "timeMinutes": 30,
-    "imageAsset": "assets/images/r21_beef_burger.png",
+    "imageAsset": "assets/images/r21_mac_and_cheese.png",
     "description": "Creamy stovetop mac and cheese.",
     "ingredients": [
       {
@@ -794,7 +794,7 @@
     "id": "r22",
     "name": "Pesto Pasta",
     "timeMinutes": 15,
-    "imageAsset": "assets/images/r22_chicken_caesar_wrap.png",
+    "imageAsset": "assets/images/r22_pesto_pasta.png",
     "description": "Pasta tossed with basil pesto.",
     "ingredients": [
       {
@@ -824,7 +824,7 @@
     "id": "r23",
     "name": "Quinoa Bowl",
     "timeMinutes": 25,
-    "imageAsset": "assets/images/r23_fruit_salad.png",
+    "imageAsset": "assets/images/r23_quinoa_bowl.png",
     "description": "Healthy bowl with quinoa and veggies.",
     "ingredients": [
       {
@@ -866,7 +866,7 @@
     "id": "r24",
     "name": "Bolognese Sauce",
     "timeMinutes": 45,
-    "imageAsset": "assets/images/r24_pesto_pasta.png",
+    "imageAsset": "assets/images/r24_bolognese_sauce.png",
     "description": "Rich meat sauce for pasta.",
     "ingredients": [
       {
@@ -908,7 +908,7 @@
     "id": "r25",
     "name": "Chicken Salad",
     "timeMinutes": 15,
-    "imageAsset": "assets/images/r25_turkey_chili.png",
+    "imageAsset": "assets/images/r25_chicken_salad.png",
     "description": "Light chicken salad with yogurt dressing.",
     "ingredients": [
       {
@@ -1129,7 +1129,7 @@
     "id": "r31",
     "name": "Grilled Cheese",
     "timeMinutes": 8,
-    "imageAsset": "assets/images/r31_caprese_salad.png",
+    "imageAsset": "assets/images/r31_grilled_cheese_sandwich.png",
     "description": "Golden grilled cheese sandwich.",
     "ingredients": [
       {
