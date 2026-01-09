@@ -7,10 +7,10 @@ import 'package:table_calendar/table_calendar.dart';
 import '../models/recipe.dart';
 import 'recipe_details_screen.dart';
 
-/// CalendarScreen (MVP):
-/// - User selects a day and plans recipes for that date
-/// - Persisted locally via Hive:
-///   calendarBox[ "YYYY-MM-DD" ] = JSON string of List<String> recipeIds
+/// Calendar screen (MVP)
+/// The user can assign recipes to specific dates.
+/// Data is stored locally in Hive:
+/// calendarBox["YYYY-MM-DD"] = JSON encoded List<String> (recipeIds)
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
@@ -19,39 +19,36 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  // App colors (match the rest of the UI / Figma)
+  // Basic app colors (same palette as other screens)
   static const _bg = Color(0xFFFFF6F2);
   static const _accent = Color(0xFFD87C5A);
 
-  /// Currently selected date (used for the "Planned recipes" list)
+  // Selected day (used for the list below the calendar)
   late DateTime _selectedDate;
 
-  /// Currently visible month/day in the calendar (used for month navigation)
+  // Month currently shown in the calendar (used for custom header)
   late DateTime _focusedDay;
 
-  /// We keep month-only view for MVP (simpler and looks "finished")
+  // Keep month view only (sufficient for MVP)
   final CalendarFormat _calendarFormat = CalendarFormat.month;
 
   @override
   void initState() {
     super.initState();
 
-    // Important: we store dates without time, so day comparisons and Hive keys are stable
+    // Dates are saved without time (00:00) to keep Hive keys stable
     _selectedDate = _stripTime(DateTime.now());
     _focusedDay = _selectedDate;
   }
 
-  /// Removes time component (00:00) to avoid bugs like:
-  /// "same day but different hour" => different Hive keys / selection mismatch.
+  // Returns the date without time part (00:00)
   DateTime _stripTime(DateTime d) => DateTime(d.year, d.month, d.day);
 
-  /// Converts date into a stable Hive key: "YYYY-MM-DD"
-  /// Example: 2026-01-07
+  // Converts a date into a stable key used in Hive (YYYY-MM-DD)
   String _dateKey(DateTime d) =>
       "${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}";
 
-  /// Month label for our custom header (TableCalendar header is hidden)
-  /// NOTE: Name says "De", but list is English -> acceptable for MVP; can be localized later.
+  // Month name for the custom header (English for now; can be localized later)
   String _monthNameDe(int month) {
     const months = [
       'January',
@@ -70,7 +67,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return months[month - 1];
   }
 
-  /// Adds/subtracts months while keeping day valid (e.g., Jan 31 -> Feb 28/29)
+  // Adds/subtracts months and keeps the day valid (e.g. 31 -> 28/29)
   DateTime _addMonths(DateTime date, int months) {
     final y = date.year + ((date.month - 1 + months) ~/ 12);
     final m = ((date.month - 1 + months) % 12) + 1;
@@ -79,18 +76,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return DateTime(y, m, d);
   }
 
-  /// Reads planned recipe IDs for a date from Hive.
-  /// Stored format: jsonEncode(List<String>)
+  // Reads the planned recipe IDs for one date from Hive
   List<String> _getPlannedIds(Box<String> calendarBox, DateTime date) {
     final raw = calendarBox.get(_dateKey(date));
     if (raw == null || raw.isEmpty) return [];
 
-    // Decode JSON string -> List<dynamic> -> List<String>
     final decoded = jsonDecode(raw);
     return (decoded as List).map((e) => e.toString()).toList();
   }
 
-  /// Writes planned recipe IDs back to Hive (persistent storage).
+  // Writes the planned recipe IDs for one date back to Hive
   Future<void> _setPlannedIds(
     Box<String> calendarBox,
     DateTime date,
@@ -99,11 +94,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     await calendarBox.put(_dateKey(date), jsonEncode(ids));
   }
 
-  /// Toggle behavior:
-  /// - if recipe is already planned for this day -> remove it
-  /// - otherwise -> add it
-  ///
-  /// Implementation detail: we use Set to prevent duplicates.
+  // Adds/removes one recipe ID for a selected date
   Future<void> _togglePlanned(
     Box<String> calendarBox,
     DateTime date,
@@ -120,8 +111,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     await _setPlannedIds(calendarBox, date, set.toList());
   }
 
-  /// Loads all recipes from Hive recipesBox, parses JSON, sorts by name.
-  /// Used for the "Add recipe" bottom sheet.
+  // Loads all recipes from recipesBox and sorts them by name (used in bottom sheet)
   List<Recipe> _loadAllRecipes(Box<String> recipesBox) {
     final out = <Recipe>[];
 
@@ -130,7 +120,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         final map = jsonDecode(raw) as Map<String, dynamic>;
         out.add(Recipe.fromMap(map));
       } catch (_) {
-        // If one entry is corrupted, we ignore it to keep UI stable (no crash).
+        // Ignore invalid entries to avoid breaking the UI
       }
     }
 
@@ -138,8 +128,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return out;
   }
 
-  /// Builds a lookup map {recipeId -> Recipe} for fast resolving:
-  /// plannedIds (strings) -> full Recipe objects for UI.
+  // Builds a map for quick access: { recipeId -> Recipe }
   Map<String, Recipe> _recipesById(Box<String> recipesBox) {
     final m = <String, Recipe>{};
 
@@ -149,26 +138,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
         final r = Recipe.fromMap(map);
         m[r.id] = r;
       } catch (_) {
-        // Ignore invalid entries to prevent crashes.
+        // Skip invalid entries
       }
     }
 
     return m;
   }
 
-  /// Opens a bottom sheet:
-  /// - shows Bookmarks (favorites) first
-  /// - then shows All recipes
-  ///
-  /// When user taps a recipe, it is toggled for the selected day and stored in Hive.
+  // Bottom sheet for selecting a recipe and adding it to the selected day
   Future<void> _openAddRecipeSheet() async {
     final recipesBox = Hive.box<String>('recipesBox');
     final favoritesBox = Hive.box<String>('favoritesBox');
 
-    // Full list (sorted)
     final all = _loadAllRecipes(recipesBox);
 
-    // Favorites are stored as IDs in favoritesBox (values)
+    // favoritesBox stores recipe IDs
     final favIds = favoritesBox.values.toSet();
     final favorites = all.where((r) => favIds.contains(r.id)).toList();
 
@@ -224,7 +208,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  /// Small UI helper for section titles in the bottom sheet
+  // Section header text for the bottom sheet
   Widget _sectionTitle(String text) {
     return Row(
       children: [
@@ -233,9 +217,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  /// Tile inside bottom sheet:
-  /// - tap => toggles recipe for the selected date (Hive write)
-  /// - then closes the sheet
+  // One row in the bottom sheet (tap = toggle planned recipe for the selected day)
   Widget _pickTile(BuildContext sheetContext, Recipe recipe) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
@@ -245,20 +227,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
       onTap: () async {
         final calendarBox = Hive.box<String>('calendarBox');
 
-        // Persist change: add/remove the recipe id for the selected date
         await _togglePlanned(calendarBox, _selectedDate, recipe.id);
 
-        // Safety: avoid calling Navigator if widget already disposed
         if (!mounted) return;
-
         Navigator.pop(sheetContext);
       },
     );
   }
 
-  /// Custom calendar day cell:
-  /// - accent background for selected day
-  /// - grey background for today
+  // Day cell used for default/today/selected builders
   Widget _dayCell({
     required DateTime day,
     required bool isSelected,
@@ -290,9 +267,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Hive boxes used by this screen:
-    // - calendarBox: dateKey -> JSON list of recipeIds
-    // - recipesBox: recipe data as JSON strings
+    // calendarBox: dateKey -> JSON list of recipeIds
+    // recipesBox: recipe JSON data
     final calendarBox = Hive.box<String>('calendarBox');
     final recipesBox = Hive.box<String>('recipesBox');
 
@@ -301,14 +277,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
         backgroundColor: _bg,
         elevation: 0,
 
-        // This is a tab screen, so we remove the back arrow (no nested navigation)
+        // This screen is opened via bottom navigation, so no back button here
         automaticallyImplyLeading: false,
         leading: null,
 
         title: const Text('Calendar', style: TextStyle(fontWeight: FontWeight.w600)),
         centerTitle: true,
 
-        // "Today" button: quick reset to current date
+        // Quick jump to today
         actions: [
           TextButton(
             onPressed: () {
@@ -333,16 +309,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
 
-      /// ValueListenableBuilder makes this screen reactive to Hive changes:
-      /// - when calendarBox changes (put/delete), UI rebuilds automatically
-      /// - planned list and markers update without manual refresh
+      // Rebuild the screen when calendarBox changes (add/remove planned recipes)
       body: ValueListenableBuilder(
         valueListenable: calendarBox.listenable(),
         builder: (_, __, ___) {
-          // 1) Read planned recipe ids for selected date
           final plannedIds = _getPlannedIds(calendarBox, _selectedDate);
 
-          // 2) Resolve ids -> full Recipe objects using a lookup map
           final byId = _recipesById(recipesBox);
           final plannedRecipes =
               plannedIds.map((id) => byId[id]).whereType<Recipe>().toList();
@@ -351,7 +323,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // Custom month header + navigation (instead of TableCalendar header)
+                // Custom month header (TableCalendar header is disabled)
                 Row(
                   children: [
                     Text(
@@ -383,7 +355,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Calendar UI
                 TableCalendar(
                   firstDay: DateTime.utc(2020, 1, 1),
                   lastDay: DateTime.utc(2035, 12, 31),
@@ -392,10 +363,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   startingDayOfWeek: StartingDayOfWeek.monday,
                   headerVisible: false,
 
-                  // Defines which day is shown as selected
                   selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
 
-                  // User selects a day -> update state (UI + planned list)
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
                       _selectedDate = _stripTime(selectedDay);
@@ -403,20 +372,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     });
                   },
 
-                  // When user swipes months, we update focusedDay
-                  // (setState is not required for internal calendar animation,
-                  // but we need focusedDay for our custom header)
+                  // Update focused month when user swipes
                   onPageChanged: (focusedDay) {
                     _focusedDay = _stripTime(focusedDay);
                   },
 
-                  // Provides "events" per day: here it's list of planned recipe IDs
-                  // Used by markerBuilder to show dots on days with planned recipes
+                  // Used for marker dots
                   eventLoader: (day) => _getPlannedIds(calendarBox, _stripTime(day)),
 
                   calendarStyle: const CalendarStyle(
                     outsideDaysVisible: false,
-                    markersMaxCount: 0, // we draw markers manually
+                    markersMaxCount: 0,
                     defaultTextStyle: TextStyle(color: Colors.black87),
                     weekendTextStyle: TextStyle(color: Colors.black87),
                   ),
@@ -438,7 +404,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       isToday: isSameDay(day, DateTime.now()),
                     ),
 
-                    // Dots under a day: indicates planned recipes count (max 3 dots)
+                    // Dots under the day number (max 3)
                     markerBuilder: (context, day, events) {
                       if (events.isEmpty) return const SizedBox.shrink();
                       final dots = events.length >= 3 ? 3 : events.length;
@@ -466,7 +432,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                 const SizedBox(height: 16),
 
-                // Planned list header + Add button
                 Row(
                   children: [
                     const Expanded(
@@ -484,7 +449,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
                 const SizedBox(height: 10),
 
-                // Planned recipes list for the selected date
                 Expanded(
                   child: plannedRecipes.isEmpty
                       ? _emptyState()
@@ -502,7 +466,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  /// Empty state shown when no recipes are planned for selected day
+  // Shown when there are no planned recipes for the selected day
   Widget _emptyState() {
     return Container(
       width: double.infinity,
@@ -519,9 +483,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  /// Card in "Planned recipes" list:
-  /// - tap card => open RecipeDetailsScreen
-  /// - tap trash icon => remove this recipe from selected day (Hive update)
+  // One card in the planned list (tap opens details, trash removes from this date)
   Widget _plannedCard(Recipe recipe) {
     return InkWell(
       borderRadius: BorderRadius.circular(18),
@@ -532,8 +494,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             builder: (_) => RecipeDetailsScreen(
               recipe: recipe,
 
-              // For MVP we don't compute have/missing here
-              // (details screen can still display recipe normally)
+              // In this screen we keep it simple and do not calculate matching
               haveIngredientsLower: const [],
               missingIngredientsLower: const [],
             ),
@@ -569,8 +530,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ],
               ),
             ),
-
-            // Removes recipe from the selected day (toggle)
             IconButton(
               onPressed: () async {
                 final calendarBox = Hive.box<String>('calendarBox');

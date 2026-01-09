@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'recipes_screen.dart';
 
-/// Colors to match your Figma
+// Basic palette used in the app UI
 const _bg = Color(0xFFFFF6F2);
 const _accent = Color(0xFFD87C5A);
 const _muted = Color(0xFF8C8C8C);
 
-/// Hive box names
+// Hive box names used on this screen
 const _ingredientsBoxName = 'ingredientsBox';
-const _uiBoxName = 'uiBox'; // stores small UI flags, e.g., 'assumptionDismissed'
-const _recipesBoxName = 'recipesBox'; // used to build ingredient suggestions
+const _uiBoxName = 'uiBox';       // small UI flags (e.g., dismissed hints)
+const _recipesBoxName = 'recipesBox'; // source for suggestion list
 
-// Stateful screen that manages the fridge ingredients and UI state.
+// Fridge screen: manages user ingredients and writes them to Hive.
 class FridgeScreen extends StatefulWidget {
   const FridgeScreen({super.key});
 
@@ -21,21 +21,22 @@ class FridgeScreen extends StatefulWidget {
   State<FridgeScreen> createState() => _FridgeScreenState();
 }
 
-
 class _FridgeScreenState extends State<FridgeScreen> {
   late final Box<String> _ingredientsBox;
   late final Box<String> _recipesBox;
   Box? _uiBox;
 
-  // Controls the text input of the search field.
+  // Search field controller
   final TextEditingController _search = TextEditingController();
+
+  // UI state for the dismissible hint card
   bool _assumptionDismissed = false;
 
-  // Edit mode state
+  // Edit mode: multi-select and delete
   bool _editMode = false;
   final Set<int> _selectedIndexes = <int>{};
 
-  // Dictionary for suggestions built from recipesBox (not hardcoded)
+  // Ingredient suggestions built from recipe data (recipesBox)
   List<String> _ingredientDictionary = const [];
 
   @override
@@ -46,10 +47,10 @@ class _FridgeScreenState extends State<FridgeScreen> {
 
     _openUiBox();
 
-    // Build once
+    // Initial build of suggestions
     _rebuildIngredientDictionary();
 
-    // Rebuild when recipesBox changes (NO setState during build)
+    // Update suggestions when recipes change
     _recipesBox.listenable().addListener(_onRecipesBoxChanged);
   }
 
@@ -95,7 +96,7 @@ class _FridgeScreenState extends State<FridgeScreen> {
 
     final list = set.toList()..sort();
 
-    // Avoid unnecessary rebuilds
+    // Avoid setState if nothing changed (prevents unnecessary rebuilds)
     if (_ingredientDictionary.length == list.length) {
       var same = true;
       for (var i = 0; i < list.length; i++) {
@@ -111,12 +112,11 @@ class _FridgeScreenState extends State<FridgeScreen> {
     setState(() => _ingredientDictionary = list);
   }
 
-  // ---------- Suggestions logic ----------
+  // ---------------- Suggestions ----------------
 
-  /// Returns filtered, alphabetically sorted suggestions.
-  /// Rule:
-  ///  - If input "q" is non-empty, show items that start with q
-  ///    OR contain q (case-insensitive).
+  // Filters suggestions by:
+  // - startsWith(query) first
+  // - contains(query) second
   List<String> _filteredSuggestions(String q) {
     final query = q.trim().toLowerCase();
     if (query.isEmpty) return const <String>[];
@@ -139,6 +139,7 @@ class _FridgeScreenState extends State<FridgeScreen> {
     return [...starts, ...contains];
   }
 
+  // Case-insensitive check to prevent duplicates
   bool _alreadyAdded(String name) {
     final lower = name.toLowerCase();
     for (var i = 0; i < _ingredientsBox.length; i++) {
@@ -168,7 +169,8 @@ class _FridgeScreenState extends State<FridgeScreen> {
     setState(() {});
   }
 
-  // ---------- Edit mode operations ----------
+  // ---------------- Edit mode ----------------
+
   void _toggleEditMode() {
     setState(() {
       _editMode = !_editMode;
@@ -205,14 +207,13 @@ class _FridgeScreenState extends State<FridgeScreen> {
     });
   }
 
-  // ---------- UI helpers ----------
+  // Sort ingredients alphabetically for display
   List<MapEntry<int, String>> _sortedEntries(Box<String> box) {
     final entries = <MapEntry<int, String>>[];
     for (var i = 0; i < box.length; i++) {
       entries.add(MapEntry(i, box.getAt(i) ?? ''));
     }
-    entries
-        .sort((a, b) => a.value.toLowerCase().compareTo(b.value.toLowerCase()));
+    entries.sort((a, b) => a.value.toLowerCase().compareTo(b.value.toLowerCase()));
     return entries;
   }
 
@@ -235,7 +236,7 @@ class _FridgeScreenState extends State<FridgeScreen> {
             ),
             const SizedBox(height: 10),
 
-            // ✅ FIX: limit suggestions height to avoid overflow + allow scroll
+            // Suggestion list: height-limited + scrollable to avoid overflow
             _SuggestionList(
               suggestions: _filteredSuggestions(_search.text),
               alreadyAdded: _alreadyAdded,
@@ -305,7 +306,7 @@ class _FridgeScreenState extends State<FridgeScreen> {
   }
 }
 
-// ====================== WIDGETS ======================
+// ---------------- UI widgets ----------------
 
 class _SearchField extends StatelessWidget {
   const _SearchField({
@@ -326,8 +327,7 @@ class _SearchField extends StatelessWidget {
         prefixIcon: const Icon(Icons.search),
         filled: true,
         fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
@@ -361,13 +361,9 @@ class _SuggestionList extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 12,
-              offset: Offset(0, 4)),
+          BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4)),
         ],
       ),
-      // ✅ FIX: cap height + make list scrollable
       child: SizedBox(
         height: 220,
         child: ListView.separated(
@@ -408,8 +404,7 @@ class _AssumptionChip extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(
-              color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4))
+          BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4)),
         ],
       ),
       child: Row(
@@ -458,8 +453,7 @@ class _AvailableIngredientsCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(
-              color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4))
+          BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -467,8 +461,10 @@ class _AvailableIngredientsCard extends StatelessWidget {
           Row(
             children: [
               const Expanded(
-                child: Text('Available Ingredients',
-                    style: TextStyle(fontWeight: FontWeight.w600)),
+                child: Text(
+                  'Available Ingredients',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
               ),
               if (!editMode)
                 IconButton(
@@ -521,8 +517,7 @@ class _AvailableIngredientsCard extends StatelessWidget {
                                   color: isSel ? _accent : Colors.white,
                                 ),
                                 child: isSel
-                                    ? const Icon(Icons.check,
-                                        size: 16, color: Colors.white)
+                                    ? const Icon(Icons.check, size: 16, color: Colors.white)
                                     : null,
                               ),
                               const SizedBox(width: 10),

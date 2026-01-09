@@ -5,22 +5,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../models/recipe.dart';
 import 'recipe_details_screen.dart';
 
-/// RecipesScreen supports two modes:
-/// 1) filterByFridge == false:
-///    - "All Recipes" list (A–Z)
-///    - Search only
-///    - NO fridge matching UI (no "Missing/Have" chips)
+/// Screen with two list modes:
+/// - All Recipes (A–Z, search only)
+/// - Recipes for you (filtered/sorted by fridge ingredients + matching UI)
 ///
-/// 2) filterByFridge == true:
-///    - "Recipes for you" list, sorted by match quality:
-///        a) fewer missing first (missingCount ASC)
-///        b) more have first     (haveCount DESC)
-///        c) name A–Z
-///    - Search + matching UI (have/missing)
-///
-/// Matching rules:
-/// - We ignore salt/pepper/water for matching and sorting.
-/// - They can still exist in recipe ingredients and are shown in details.
+/// Matching notes:
+/// - salt/pepper/water are ignored in matching and sorting
+/// - they can still appear in recipe data and are shown in details
 class RecipesScreen extends StatefulWidget {
   final bool filterByFridge;
 
@@ -34,10 +25,10 @@ class _RecipesScreenState extends State<RecipesScreen> {
   late final Box<String> _ingredientsBox;
   late final Box<String> _recipesBox;
 
-  /// Ingredients ignored in matching/filtering logic.
+  /// Ingredients that are not counted for "have/missing".
   static const Set<String> _ignored = {'salt', 'pepper', 'water'};
 
-  /// Search controller (shared for both modes).
+  /// Used for filtering the list by recipe name.
   final TextEditingController _searchCtrl = TextEditingController();
 
   @override
@@ -55,7 +46,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
 
   String _normalize(String s) => s.trim().toLowerCase();
 
-  /// User ingredients from fridge, lowercased.
+  /// Reads all ingredients from the fridge box and normalizes them.
   Set<String> _userIngredientsLower() {
     final result = <String>{};
     for (var i = 0; i < _ingredientsBox.length; i++) {
@@ -66,14 +57,14 @@ class _RecipesScreenState extends State<RecipesScreen> {
     return result;
   }
 
-  /// Parse recipe JSON string (stored in Hive) into Recipe model.
+  /// Parses a JSON string (Hive storage) into the Recipe model.
   Recipe _parseRecipe(String rawJson) {
     final map = jsonDecode(rawJson) as Map<String, dynamic>;
     return Recipe.fromMap(map);
   }
 
-  /// Load all recipes from Hive.
-  /// The seed stores recipes as: key = recipe.id, value = JSON string.
+  /// Loads all recipes from Hive.
+  /// Recipes are stored as JSON strings in recipesBox.
   List<Recipe> _loadAllRecipes() {
     return _recipesBox.values
         .where((raw) => raw.trim().isNotEmpty)
@@ -81,8 +72,8 @@ class _RecipesScreenState extends State<RecipesScreen> {
         .toList();
   }
 
-  /// Compute match (have/missing) for a recipe based on current fridge ingredients.
-  /// salt/pepper/water are ignored completely for matching and sorting.
+  /// Creates a match object (have/missing) for one recipe based on fridge contents.
+  /// Ignored ingredients are skipped completely.
   _RecipeMatch _matchRecipe(Recipe recipe, Set<String> userIngredientsLower) {
     final have = <String>[];
     final missing = <String>[];
@@ -106,7 +97,9 @@ class _RecipesScreenState extends State<RecipesScreen> {
     return _RecipeMatch(recipe: recipe, have: have, missing: missing);
   }
 
-  /// Build the display list based on current mode (All Recipes vs Recipes for you).
+  /// Builds the list that is shown on the screen, depending on the mode.
+  /// - All Recipes: alphabetical
+  /// - Recipes for you: only recipes with at least one match, sorted by match quality
   List<_RecipeMatch> _buildDisplayList() {
     final user = _userIngredientsLower();
     final all = _loadAllRecipes();
@@ -114,18 +107,17 @@ class _RecipesScreenState extends State<RecipesScreen> {
     var matches = all.map((r) => _matchRecipe(r, user)).toList();
 
     if (!widget.filterByFridge) {
-      // "All Recipes": alphabetical by name.
+      // All Recipes: simple A–Z sorting.
       matches.sort(
         (a, b) => a.recipe.name.toLowerCase().compareTo(b.recipe.name.toLowerCase()),
       );
       return matches;
     }
 
-    // ✅ NEW: In "Recipes for you" mode show only recipes
-    // that match at least ONE ingredient from the fridge.
+    // Recipes for you: show only recipes that match at least one fridge ingredient.
     matches = matches.where((m) => m.have.isNotEmpty).toList();
 
-    // "Recipes for you": sort by match quality.
+    // Sort by: fewer missing -> more have -> name A–Z.
     matches.sort((a, b) {
       final missingDiff = a.missing.length.compareTo(b.missing.length);
       if (missingDiff != 0) return missingDiff;
@@ -139,7 +131,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
     return matches;
   }
 
-  /// Apply search filtering on top of the already built list.
+  /// Filters a prepared list by the search query (recipe name).
   List<_RecipeMatch> _applySearch(List<_RecipeMatch> input) {
     final q = _searchCtrl.text.trim().toLowerCase();
     if (q.isEmpty) return input;
@@ -150,6 +142,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
     }).toList();
   }
 
+  /// Reusable search bar widget (used in both modes).
   Widget _searchBar() {
     return Container(
       height: 44,
@@ -327,6 +320,7 @@ class _RecipeRowTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Recipe title (single line to keep row height stable)
                   Text(
                     match.recipe.name,
                     maxLines: 1,
@@ -345,6 +339,8 @@ class _RecipeRowTile extends StatelessWidget {
                         style: const TextStyle(fontSize: 12, color: Colors.black87),
                       ),
                     const SizedBox(height: 6),
+
+                    // Missing list (shown only if there are missing ingredients)
                     if (match.missing.isNotEmpty) ...[
                       const Text(
                         'Missing:',
@@ -360,6 +356,8 @@ class _RecipeRowTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                     ],
+
+                    // Have list (shown only if there are matched ingredients)
                     if (match.have.isNotEmpty) ...[
                       const Text(
                         'You have:',
@@ -405,6 +403,7 @@ class _RecipeThumb extends StatelessWidget {
     final hasAsset = imageAsset != null && imageAsset!.trim().isNotEmpty;
     final hasUrl = imageUrl != null && imageUrl!.trim().isNotEmpty;
 
+    // Try asset first, then URL, otherwise fallback placeholder.
     Widget image;
     if (hasAsset) {
       image = Image.asset(

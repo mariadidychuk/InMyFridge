@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-// Import the screen files
+// App tab screens (BottomNavigationBar destinations)
 import 'screens/recipes_screen.dart';
 import 'screens/calendar_screen.dart';
 import 'screens/bookmarks_screen.dart';
 import 'screens/fridge_screen.dart';
 
+/// Root scaffold for the application.
+/// Hosts the BottomNavigationBar and keeps tab state using [IndexedStack].
 class AppScaffold extends StatefulWidget {
   const AppScaffold({super.key});
 
@@ -14,8 +16,10 @@ class AppScaffold extends StatefulWidget {
 }
 
 class _AppScaffoldState extends State<AppScaffold> {
-  int _index = 3; // start on Fridge tab (index 3)
+  /// Current selected tab index (default: Fridge).
+  int _index = 3;
 
+  /// Tab pages. Stored as const to avoid unnecessary rebuilds.
   final _screens = const [
     RecipesScreen(),
     CalendarScreen(),
@@ -28,12 +32,13 @@ class _AppScaffoldState extends State<AppScaffold> {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF6F2),
 
-      // ✅ Keeps state of all tabs (Calendar won't reset)
+      // Keeps inactive tabs mounted (e.g., calendar selection is not reset)
       body: IndexedStack(
         index: _index,
         children: _screens,
       ),
 
+      // Custom-styled bottom navigation container (rounded + shadow)
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
         child: Container(

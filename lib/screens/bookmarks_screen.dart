@@ -18,7 +18,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 
   static const Color _bg = Color(0xFFFFF6F2);
 
-  // Ingredients ignored for matching (never treated as have/missing)
+  // These ingredients are excluded from matching logic (never "have" or "missing")
   static const Set<String> _ignored = {'salt', 'pepper', 'water'};
 
   final TextEditingController _searchCtrl = TextEditingController();
@@ -36,7 +36,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     super.dispose();
   }
 
-  // Finds a recipe JSON map by recipe id inside recipesBox
+  // Reads recipesBox and returns the recipe map for a given recipeId (if found)
   Map<String, dynamic>? _findRecipeMapById(String id) {
     for (int i = 0; i < _recipesBox.length; i++) {
       final raw = _recipesBox.getAt(i);
@@ -49,22 +49,27 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     return null;
   }
 
-  // Returns favorite recipe IDs (supports both keys-based and values-based storage)
+  // Returns a list of saved recipe IDs.
+  // Supports both styles:
+  // - values-based storage (favBox.values)
+  // - keys-based storage (favBox.keys)
   List<String> _favoriteIds(Box<String> favBox) {
-    final values = favBox.values.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();
+    final values =
+        favBox.values.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();
     if (values.isNotEmpty) return values;
     return favBox.keys.map((e) => e.toString()).where((e) => e.isNotEmpty).toList();
   }
 
-  // ✅ remove favorite regardless of storage style (keys OR values)
+  // Removes a bookmark.
+  // Works for both storage variants (ID as key OR ID as value).
   Future<void> _removeFavorite(String recipeId) async {
-    // If stored as keys: key == recipeId
+    // Keys-based: key == recipeId
     if (_favoritesBox.containsKey(recipeId)) {
       await _favoritesBox.delete(recipeId);
       return;
     }
 
-    // If stored as values: find matching value and delete that key
+    // Values-based: find the key that stores this value and delete it
     dynamic keyToDelete;
     for (final entry in _favoritesBox.toMap().entries) {
       if (entry.value.toString() == recipeId) {
@@ -77,14 +82,11 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     }
   }
 
-  // ✅ add back favorite (for Undo) - works for both storage styles
+  // Restores a bookmark after Undo.
+  // We try "put" first (key-value), fallback to "add" (list-style).
   Future<void> _addFavoriteBack(String recipeId) async {
-    // If box is used with keys, keep id as key:
     if (_favoritesBox.containsKey(recipeId)) return;
 
-    // If the box currently behaves like key-value storage, put is fine.
-    // If it behaves like list (values), add is fine.
-    // We'll try to restore in the most compatible way:
     try {
       await _favoritesBox.put(recipeId, recipeId);
     } catch (_) {
@@ -92,7 +94,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     }
   }
 
-  // Returns user's available ingredients (lowercase)
+  // Reads user's ingredients from ingredientsBox as lowercase Set for matching
   Set<String> _userIngredientsLower(Box<String> ingredientsBox) {
     final result = <String>{};
     for (int i = 0; i < ingredientsBox.length; i++) {
@@ -104,7 +106,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     return result;
   }
 
-  // Returns ingredients missing for a given recipe
+  // Computes missing ingredient names for a recipe (ignored items are skipped)
   List<String> _missingForRecipe(Recipe recipe, Set<String> have) {
     final missing = <String>[];
     for (final ing in recipe.ingredients) {
@@ -116,7 +118,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     return missing;
   }
 
-  // Returns ingredients already available for a given recipe
+  // Computes available ingredient names for a recipe (ignored items are skipped)
   List<String> _haveForRecipe(Recipe recipe, Set<String> have) {
     final haveList = <String>[];
     for (final ing in recipe.ingredients) {
@@ -128,8 +130,9 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     return haveList;
   }
 
-  // Extracts image path from recipe JSON:
-  // - imageAsset for local images
+  // Returns the image reference from JSON map:
+  // - prefer local asset path (imageAsset)
+  // - otherwise use URL (imageUrl)
   String? _imageFromMap(Map<String, dynamic> map) {
     final asset = (map['imageAsset'] ?? '').toString().trim();
     if (asset.isNotEmpty) return asset;
@@ -140,6 +143,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     return null;
   }
 
+  // Simple confirmation dialog before removing a bookmark by swipe
   Future<bool> _confirmRemove(BuildContext context) async {
     final res = await showDialog<bool>(
       context: context,
@@ -161,6 +165,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     return res ?? false;
   }
 
+  // Background shown when the user swipes a card to remove it
   Widget _dismissBg() {
     return Container(
       alignment: Alignment.centerRight,
@@ -186,6 +191,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     );
   }
 
+  // SnackBar with Undo option after removing a bookmark
   void _showUndoSnack({
     required String recipeId,
     required String title,
@@ -203,6 +209,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     );
   }
 
+  // Card widget used in the bookmarks list (image + title overlay)
   Widget _imageCard({
     required String? img,
     required String title,
@@ -218,7 +225,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // image
+              // Main image: asset preferred, otherwise network, otherwise placeholder
               if (img != null && img.trim().isNotEmpty && img.startsWith('assets/'))
                 Image.asset(
                   img,
@@ -239,7 +246,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                   ),
                 ),
 
-              // smoother gradient + title
+              // Title overlay with gradient for readability
               Positioned(
                 left: 0,
                 right: 0,
@@ -294,6 +301,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ValueListenableBuilder(
+          // Rebuild when favoritesBox changes (add/remove bookmark)
           valueListenable: _favoritesBox.listenable(),
           builder: (context, Box<String> favBox, _) {
             final ids = _favoriteIds(favBox);
@@ -302,6 +310,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
               return const Center(child: Text('No bookmarks yet.'));
             }
 
+            // Resolve saved IDs -> full Recipe objects from recipesBox
             final items = <({Recipe recipe, Map<String, dynamic> map})>[];
 
             for (final id in ids) {
@@ -317,6 +326,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
               return const Center(child: Text('Bookmarks exist, but recipes data not found.'));
             }
 
+            // Simple name search within bookmarks
             final q = _searchCtrl.text.trim().toLowerCase();
             final shown = q.isEmpty
                 ? items
@@ -325,6 +335,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Search bar
                 Container(
                   height: 44,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -363,6 +374,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                         final recipe = shown[index].recipe;
                         final map = shown[index].map;
 
+                        // Compute have/missing for details screen preview logic
                         final haveSet = _userIngredientsLower(ingredientsBox);
                         final missing = _missingForRecipe(recipe, haveSet);
                         final haveList = _haveForRecipe(recipe, haveSet);

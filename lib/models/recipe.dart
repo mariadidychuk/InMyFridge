@@ -1,3 +1,5 @@
+/// Single ingredient of a recipe with display name and amount.
+/// Used inside [Recipe] for UI rendering and persistence.
 class RecipeIngredient {
   final String name;
   final String amount;
@@ -7,6 +9,7 @@ class RecipeIngredient {
     required this.amount,
   });
 
+  /// Creates an ingredient from a JSON-compatible map.
   factory RecipeIngredient.fromMap(Map<String, dynamic> map) {
     return RecipeIngredient(
       name: (map['name'] ?? '').toString(),
@@ -14,32 +17,35 @@ class RecipeIngredient {
     );
   }
 
+  /// Converts ingredient into a map for storage (Hive / JSON).
   Map<String, dynamic> toMap() => {
         'name': name,
         'amount': amount,
       };
 }
 
+/// Core domain model representing a cooking recipe.
+/// Central data structure used across the entire application.
 class Recipe {
   final String id;
   final String name;
 
-  /// Minutes (integer) used by UI: "${timeMinutes} min"
+  /// Preparation time in minutes (used directly by UI).
   final int timeMinutes;
 
-  /// 1–2 sentences description (optional but recommended)
+  /// Short description shown in recipe details.
   final String description;
 
-  /// Ingredients with amounts
+  /// List of ingredients including amounts.
   final List<RecipeIngredient> ingredients;
 
-  /// Steps displayed as "Step 1/2/3"
+  /// Ordered cooking steps displayed sequentially.
   final List<String> steps;
 
-  /// Optional: local asset path (e.g. 'assets/images/pancakes.jpg')
+  /// Optional local image asset path.
   final String? imageAsset;
 
-  /// Optional: network image URL
+  /// Optional network image URL.
   final String? imageUrl;
 
   const Recipe({
@@ -53,13 +59,13 @@ class Recipe {
     this.imageUrl,
   });
 
+  /// Creates a Recipe instance from persisted JSON data.
+  /// Supports multiple legacy formats for backward compatibility.
   factory Recipe.fromMap(Map<String, dynamic> map) {
     final rawIngredients = (map['ingredients'] as List?) ?? const [];
     final rawSteps = (map['steps'] as List?) ?? const [];
 
-    // Support both:
-    // 1) ingredients: [{"name":"flour","amount":"250 g"}, ...]
-    // 2) ingredients: ["flour","milk"]  -> amount becomes ""
+    // Ingredients can be stored either as objects or plain strings.
     final ingredients = rawIngredients.map((e) {
       if (e is Map<String, dynamic>) {
         return RecipeIngredient.fromMap(e);
@@ -67,7 +73,7 @@ class Recipe {
       return RecipeIngredient(name: e.toString(), amount: '');
     }).toList();
 
-    // Support time stored as int minutes or as string like "30 min"
+    // Time can be stored as int or formatted string (e.g. "30 min").
     int parseMinutes(dynamic v) {
       if (v == null) return 0;
       if (v is int) return v;
@@ -91,6 +97,7 @@ class Recipe {
     );
   }
 
+  /// Converts recipe into a JSON-compatible map for local persistence.
   Map<String, dynamic> toMap() => {
         'id': id,
         'name': name,
