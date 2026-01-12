@@ -281,7 +281,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         automaticallyImplyLeading: false,
         leading: null,
 
-        title: const Text('Calendar', style: TextStyle(fontWeight: FontWeight.w600)),
+        title: const Text('Calendar'),
         centerTitle: true,
 
         // Quick jump to today

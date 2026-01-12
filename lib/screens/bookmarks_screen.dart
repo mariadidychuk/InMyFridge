@@ -295,7 +295,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
       appBar: AppBar(
         backgroundColor: _bg,
         elevation: 0,
-        title: const Text('Bookmarks', style: TextStyle(fontWeight: FontWeight.w600)),
+        title: const Text('Bookmarks'),
         centerTitle: true,
       ),
       body: Padding(
