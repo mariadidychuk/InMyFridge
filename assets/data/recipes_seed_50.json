@@ -1,0 +1,1828 @@
+[
+  {
+    "id": "r01",
+    "name": "Spaghetti Carbonara",
+    "timeMinutes": 20,
+    "imageAsset": "assets/images/r01_spaghetti_carbonara.png",
+    "description": "Classic pasta with eggs and cheese.",
+    "ingredients": [
+      {
+        "name": "spaghetti",
+        "amount": "200 g"
+      },
+      {
+        "name": "eggs",
+        "amount": "2"
+      },
+      {
+        "name": "parmesan",
+        "amount": "50 g"
+      },
+      {
+        "name": "bacon",
+        "amount": "100 g"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook spaghetti in salted water until al dente.",
+      "Fry bacon until crispy; remove from heat.",
+      "Whisk eggs with parmesan and pepper.",
+      "Combine pasta with bacon, then stir in egg-cheese mixture off the heat."
+    ]
+  },
+  {
+    "id": "r02",
+    "name": "Chicken Stir-Fry",
+    "timeMinutes": 25,
+    "imageAsset": "assets/images/r02_chicken_stir_fry.png",
+    "description": "Quick stir-fry with vegetables and soy sauce.",
+    "ingredients": [
+      {
+        "name": "chicken breast",
+        "amount": "250 g"
+      },
+      {
+        "name": "broccoli",
+        "amount": "150 g"
+      },
+      {
+        "name": "carrot",
+        "amount": "1"
+      },
+      {
+        "name": "soy sauce",
+        "amount": "2 tbsp"
+      },
+      {
+        "name": "garlic",
+        "amount": "1 clove"
+      },
+      {
+        "name": "oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "water",
+        "amount": "2 tbsp"
+      }
+    ],
+    "steps": [
+      "Slice chicken and vegetables.",
+      "Heat oil in a pan; cook chicken until browned.",
+      "Add vegetables and stir-fry 5–7 minutes.",
+      "Add soy sauce and a splash of water; simmer 2 minutes."
+    ]
+  },
+  {
+    "id": "r03",
+    "name": "Avocado Toast",
+    "timeMinutes": 10,
+    "imageAsset": "assets/images/r03_avocado_toast.png",
+    "description": "Fast breakfast toast with mashed avocado.",
+    "ingredients": [
+      {
+        "name": "bread",
+        "amount": "2 slices"
+      },
+      {
+        "name": "avocado",
+        "amount": "1"
+      },
+      {
+        "name": "lemon juice",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Toast the bread.",
+      "Mash avocado with lemon juice, salt, and pepper.",
+      "Spread on toast and serve."
+    ]
+  },
+  {
+    "id": "r04",
+    "name": "Tomato Basil Pasta",
+    "timeMinutes": 18,
+    "imageAsset": "assets/images/r04_tomato_basil_pasta.png",
+    "description": "Simple tomato pasta with basil.",
+    "ingredients": [
+      {
+        "name": "pasta",
+        "amount": "200 g"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "250 g"
+      },
+      {
+        "name": "garlic",
+        "amount": "2 cloves"
+      },
+      {
+        "name": "basil",
+        "amount": "a handful"
+      },
+      {
+        "name": "olive oil",
+        "amount": "2 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook pasta until al dente.",
+      "Sauté garlic in olive oil; add tomatoes and simmer 8 minutes.",
+      "Toss pasta with sauce; add basil and season."
+    ]
+  },
+  {
+    "id": "r05",
+    "name": "Greek Salad",
+    "timeMinutes": 12,
+    "imageAsset": "assets/images/r05_greek_salad.png",
+    "description": "Fresh salad with feta and olives.",
+    "ingredients": [
+      {
+        "name": "cucumber",
+        "amount": "1"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "2"
+      },
+      {
+        "name": "feta",
+        "amount": "120 g"
+      },
+      {
+        "name": "olives",
+        "amount": "50 g"
+      },
+      {
+        "name": "red onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Chop vegetables and place in a bowl.",
+      "Add feta and olives.",
+      "Dress with olive oil and pepper; toss gently."
+    ]
+  },
+  {
+    "id": "r06",
+    "name": "Omelette with Cheese",
+    "timeMinutes": 10,
+    "imageAsset": "assets/images/r06_omelette_with_cheese.png",
+    "description": "Fluffy omelette with melted cheese.",
+    "ingredients": [
+      {
+        "name": "eggs",
+        "amount": "3"
+      },
+      {
+        "name": "cheddar",
+        "amount": "40 g"
+      },
+      {
+        "name": "butter",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Whisk eggs with salt and pepper.",
+      "Melt butter in a pan; pour eggs.",
+      "Add cheese; fold when set and serve."
+    ]
+  },
+  {
+    "id": "r07",
+    "name": "Tuna Sandwich",
+    "timeMinutes": 8,
+    "imageAsset": "assets/images/r07_tuna_sandwich.png",
+    "description": "Quick tuna mayo sandwich.",
+    "ingredients": [
+      {
+        "name": "bread",
+        "amount": "2 slices"
+      },
+      {
+        "name": "tuna",
+        "amount": "1 can"
+      },
+      {
+        "name": "mayonnaise",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "lettuce",
+        "amount": "2 leaves"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Mix tuna with mayonnaise.",
+      "Add lettuce on bread, spread tuna mixture, close sandwich."
+    ]
+  },
+  {
+    "id": "r08",
+    "name": "Vegetable Soup",
+    "timeMinutes": 35,
+    "imageAsset": "assets/images/r08_vegetable_soup.png",
+    "description": "Comforting soup with mixed vegetables.",
+    "ingredients": [
+      {
+        "name": "potatoes",
+        "amount": "2"
+      },
+      {
+        "name": "carrot",
+        "amount": "1"
+      },
+      {
+        "name": "celery",
+        "amount": "2 stalks"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "vegetable broth",
+        "amount": "700 ml"
+      },
+      {
+        "name": "water",
+        "amount": "200 ml"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Chop vegetables.",
+      "Bring broth and water to a boil; add vegetables.",
+      "Simmer 25 minutes until tender; season."
+    ]
+  },
+  {
+    "id": "r09",
+    "name": "Beef Tacos",
+    "timeMinutes": 25,
+    "imageAsset": "assets/images/r09_beef_tacos.png",
+    "description": "Tacos with seasoned beef and toppings.",
+    "ingredients": [
+      {
+        "name": "ground beef",
+        "amount": "250 g"
+      },
+      {
+        "name": "taco shells",
+        "amount": "6"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "1"
+      },
+      {
+        "name": "lettuce",
+        "amount": "60 g"
+      },
+      {
+        "name": "cheddar",
+        "amount": "50 g"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook ground beef in a pan until browned.",
+      "Chop toppings and grate cheese.",
+      "Fill taco shells with beef and toppings."
+    ]
+  },
+  {
+    "id": "r10",
+    "name": "Pancakes",
+    "timeMinutes": 20,
+    "imageAsset": "assets/images/r10_pancakes.png",
+    "description": "Classic fluffy pancakes.",
+    "ingredients": [
+      {
+        "name": "flour",
+        "amount": "180 g"
+      },
+      {
+        "name": "milk",
+        "amount": "250 ml"
+      },
+      {
+        "name": "egg",
+        "amount": "1"
+      },
+      {
+        "name": "baking powder",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "butter",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "pinch"
+      }
+    ],
+    "steps": [
+      "Mix dry ingredients.",
+      "Whisk in milk and egg to form batter.",
+      "Cook pancakes on a lightly buttered pan."
+    ]
+  },
+  {
+    "id": "r11",
+    "name": "Caprese Sandwich",
+    "timeMinutes": 10,
+    "imageAsset": "assets/images/r11_caprese_sandwich.png",
+    "description": "Mozzarella-tomato-basil sandwich.",
+    "ingredients": [
+      {
+        "name": "bread",
+        "amount": "2 slices"
+      },
+      {
+        "name": "mozzarella",
+        "amount": "80 g"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "1"
+      },
+      {
+        "name": "basil",
+        "amount": "a few leaves"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Slice mozzarella and tomato.",
+      "Assemble with basil; drizzle olive oil and season."
+    ]
+  },
+  {
+    "id": "r12",
+    "name": "Fried Rice",
+    "timeMinutes": 20,
+    "imageAsset": "assets/images/r12_fried_rice.png",
+    "description": "Leftover-friendly fried rice.",
+    "ingredients": [
+      {
+        "name": "rice (cooked)",
+        "amount": "300 g"
+      },
+      {
+        "name": "egg",
+        "amount": "1"
+      },
+      {
+        "name": "peas",
+        "amount": "80 g"
+      },
+      {
+        "name": "soy sauce",
+        "amount": "1.5 tbsp"
+      },
+      {
+        "name": "oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "garlic",
+        "amount": "1 clove"
+      }
+    ],
+    "steps": [
+      "Scramble egg in hot oil; set aside.",
+      "Stir-fry garlic and peas 2 minutes.",
+      "Add rice, soy sauce, and egg; fry until hot."
+    ]
+  },
+  {
+    "id": "r13",
+    "name": "Baked Salmon",
+    "timeMinutes": 22,
+    "imageAsset": "assets/images/r13_baked_salmon.png",
+    "description": "Oven-baked salmon with lemon.",
+    "ingredients": [
+      {
+        "name": "salmon",
+        "amount": "2 fillets"
+      },
+      {
+        "name": "lemon",
+        "amount": "1/2"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Preheat oven to 200°C.",
+      "Place salmon on tray; drizzle oil and lemon juice.",
+      "Bake 12–15 minutes; season."
+    ]
+  },
+  {
+    "id": "r14",
+    "name": "Chickpea Curry",
+    "timeMinutes": 30,
+    "imageAsset": "assets/images/r14_chickpea_curry.png",
+    "description": "Creamy curry with chickpeas.",
+    "ingredients": [
+      {
+        "name": "chickpeas",
+        "amount": "1 can"
+      },
+      {
+        "name": "coconut milk",
+        "amount": "250 ml"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "curry powder",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "150 g"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "water",
+        "amount": "50 ml"
+      }
+    ],
+    "steps": [
+      "Sauté onion until soft.",
+      "Add curry powder and tomatoes; cook 3 minutes.",
+      "Add chickpeas, coconut milk, and water; simmer 15 minutes."
+    ]
+  },
+  {
+    "id": "r15",
+    "name": "Caesar Salad",
+    "timeMinutes": 15,
+    "imageAsset": "assets/images/r15_caesar_salad.png",
+    "description": "Crisp romaine with creamy dressing.",
+    "ingredients": [
+      {
+        "name": "romaine",
+        "amount": "1"
+      },
+      {
+        "name": "croutons",
+        "amount": "60 g"
+      },
+      {
+        "name": "parmesan",
+        "amount": "40 g"
+      },
+      {
+        "name": "chicken",
+        "amount": "200 g"
+      },
+      {
+        "name": "caesar dressing",
+        "amount": "3 tbsp"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Grill or pan-cook chicken; slice.",
+      "Toss romaine with dressing.",
+      "Top with chicken, croutons, parmesan."
+    ]
+  },
+  {
+    "id": "r16",
+    "name": "Shakshuka",
+    "timeMinutes": 28,
+    "imageAsset": "assets/images/r16_shakshuka.png",
+    "description": "Eggs poached in spiced tomato sauce.",
+    "ingredients": [
+      {
+        "name": "eggs",
+        "amount": "3"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "300 g"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "garlic",
+        "amount": "2 cloves"
+      },
+      {
+        "name": "paprika",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Sauté onion and garlic.",
+      "Add tomatoes and paprika; simmer 12 minutes.",
+      "Make wells and crack in eggs; cover until set."
+    ]
+  },
+  {
+    "id": "r17",
+    "name": "Banana Smoothie",
+    "timeMinutes": 5,
+    "imageAsset": "assets/images/r17_banana_smoothie.png",
+    "description": "Creamy banana smoothie.",
+    "ingredients": [
+      {
+        "name": "banana",
+        "amount": "1"
+      },
+      {
+        "name": "milk",
+        "amount": "250 ml"
+      },
+      {
+        "name": "yogurt",
+        "amount": "100 g"
+      },
+      {
+        "name": "honey",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "water",
+        "amount": "50 ml"
+      }
+    ],
+    "steps": [
+      "Blend all ingredients until smooth.",
+      "Serve immediately."
+    ]
+  },
+  {
+    "id": "r18",
+    "name": "Potato Wedges",
+    "timeMinutes": 35,
+    "imageAsset": "assets/images/r18_rpotato_wedges.png",
+    "description": "Crispy oven potato wedges.",
+    "ingredients": [
+      {
+        "name": "potatoes",
+        "amount": "3"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1.5 tbsp"
+      },
+      {
+        "name": "paprika",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cut potatoes into wedges.",
+      "Toss with oil, paprika, salt, pepper.",
+      "Bake at 220°C for 25–30 minutes, flipping once."
+    ]
+  },
+  {
+    "id": "r19",
+    "name": "Veggie Wrap",
+    "timeMinutes": 12,
+    "imageAsset": "assets/images/r19_veggie_wrap.png",
+    "description": "Wrap with hummus and crunchy veggies.",
+    "ingredients": [
+      {
+        "name": "tortilla",
+        "amount": "1"
+      },
+      {
+        "name": "hummus",
+        "amount": "2 tbsp"
+      },
+      {
+        "name": "cucumber",
+        "amount": "1/2"
+      },
+      {
+        "name": "carrot",
+        "amount": "1/2"
+      },
+      {
+        "name": "lettuce",
+        "amount": "2 leaves"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Spread hummus on tortilla.",
+      "Add sliced veggies and lettuce; roll tightly."
+    ]
+  },
+  {
+    "id": "r20",
+    "name": "Lentil Salad",
+    "timeMinutes": 20,
+    "imageAsset": "assets/images/r20_lentil_salad.png",
+    "description": "Protein-rich salad with lentils.",
+    "ingredients": [
+      {
+        "name": "lentils (cooked)",
+        "amount": "250 g"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "1"
+      },
+      {
+        "name": "cucumber",
+        "amount": "1/2"
+      },
+      {
+        "name": "red onion",
+        "amount": "1/4"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "lemon juice",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Combine lentils and chopped vegetables.",
+      "Dress with olive oil and lemon; season."
+    ]
+  },
+  {
+    "id": "r21",
+    "name": "Mac & Cheese",
+    "timeMinutes": 30,
+    "imageAsset": "assets/images/r21_mac_and_cheese.png",
+    "description": "Creamy stovetop mac and cheese.",
+    "ingredients": [
+      {
+        "name": "macaroni",
+        "amount": "200 g"
+      },
+      {
+        "name": "milk",
+        "amount": "250 ml"
+      },
+      {
+        "name": "cheddar",
+        "amount": "120 g"
+      },
+      {
+        "name": "butter",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "flour",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook macaroni; drain.",
+      "Make roux with butter+flour; whisk in milk to thicken.",
+      "Stir in cheese; add macaroni and season."
+    ]
+  },
+  {
+    "id": "r22",
+    "name": "Pesto Pasta",
+    "timeMinutes": 15,
+    "imageAsset": "assets/images/r22_pesto_pasta.png",
+    "description": "Pasta tossed with basil pesto.",
+    "ingredients": [
+      {
+        "name": "pasta",
+        "amount": "200 g"
+      },
+      {
+        "name": "pesto",
+        "amount": "3 tbsp"
+      },
+      {
+        "name": "parmesan",
+        "amount": "20 g"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook pasta; reserve a splash of water.",
+      "Toss pasta with pesto and a little pasta water.",
+      "Top with parmesan."
+    ]
+  },
+  {
+    "id": "r23",
+    "name": "Quinoa Bowl",
+    "timeMinutes": 25,
+    "imageAsset": "assets/images/r23_quinoa_bowl.png",
+    "description": "Healthy bowl with quinoa and veggies.",
+    "ingredients": [
+      {
+        "name": "quinoa",
+        "amount": "120 g"
+      },
+      {
+        "name": "cherry tomatoes",
+        "amount": "150 g"
+      },
+      {
+        "name": "cucumber",
+        "amount": "1/2"
+      },
+      {
+        "name": "feta",
+        "amount": "60 g"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "water",
+        "amount": "250 ml"
+      }
+    ],
+    "steps": [
+      "Cook quinoa in water until fluffy.",
+      "Chop veggies; assemble bowl with feta.",
+      "Drizzle olive oil; season."
+    ]
+  },
+  {
+    "id": "r24",
+    "name": "Bolognese Sauce",
+    "timeMinutes": 45,
+    "imageAsset": "assets/images/r24_bolognese_sauce.png",
+    "description": "Rich meat sauce for pasta.",
+    "ingredients": [
+      {
+        "name": "ground beef",
+        "amount": "300 g"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "400 g"
+      },
+      {
+        "name": "garlic",
+        "amount": "2 cloves"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "water",
+        "amount": "100 ml"
+      }
+    ],
+    "steps": [
+      "Sauté onion and garlic in oil.",
+      "Add beef and brown.",
+      "Add tomatoes and water; simmer 30 minutes; season."
+    ]
+  },
+  {
+    "id": "r25",
+    "name": "Chicken Salad",
+    "timeMinutes": 15,
+    "imageAsset": "assets/images/r25_chicken_salad.png",
+    "description": "Light chicken salad with yogurt dressing.",
+    "ingredients": [
+      {
+        "name": "chicken",
+        "amount": "200 g"
+      },
+      {
+        "name": "cucumber",
+        "amount": "1/2"
+      },
+      {
+        "name": "apple",
+        "amount": "1/2"
+      },
+      {
+        "name": "yogurt",
+        "amount": "3 tbsp"
+      },
+      {
+        "name": "lemon juice",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Dice chicken, cucumber, and apple.",
+      "Mix yogurt with lemon juice; combine and season."
+    ]
+  },
+  {
+    "id": "r26",
+    "name": "Mushroom Risotto",
+    "timeMinutes": 40,
+    "imageAsset": "assets/images/r26_mushroom_risotto.png",
+    "description": "Creamy risotto with mushrooms.",
+    "ingredients": [
+      {
+        "name": "rice (risotto)",
+        "amount": "200 g"
+      },
+      {
+        "name": "mushrooms",
+        "amount": "200 g"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "vegetable broth",
+        "amount": "700 ml"
+      },
+      {
+        "name": "parmesan",
+        "amount": "40 g"
+      },
+      {
+        "name": "butter",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Sauté onion and mushrooms.",
+      "Add rice; toast 1 minute.",
+      "Add broth gradually, stirring, until creamy; finish with butter+parmesan."
+    ]
+  },
+  {
+    "id": "r27",
+    "name": "Chili Con Carne",
+    "timeMinutes": 50,
+    "imageAsset": "assets/images/r27_chili_con_carne.png",
+    "description": "Hearty chili with beans and beef.",
+    "ingredients": [
+      {
+        "name": "ground beef",
+        "amount": "300 g"
+      },
+      {
+        "name": "kidney beans",
+        "amount": "1 can"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "400 g"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "chili powder",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "water",
+        "amount": "100 ml"
+      }
+    ],
+    "steps": [
+      "Brown beef with onion.",
+      "Add tomatoes, beans, chili powder, water.",
+      "Simmer 35 minutes; season."
+    ]
+  },
+  {
+    "id": "r28",
+    "name": "Hummus Plate",
+    "timeMinutes": 10,
+    "imageAsset": "assets/images/r28_hummus_plate.png",
+    "description": "Simple hummus snack plate.",
+    "ingredients": [
+      {
+        "name": "hummus",
+        "amount": "150 g"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "paprika",
+        "amount": "1/2 tsp"
+      },
+      {
+        "name": "cucumber",
+        "amount": "1/2"
+      },
+      {
+        "name": "carrot",
+        "amount": "1"
+      }
+    ],
+    "steps": [
+      "Plate hummus; drizzle olive oil and sprinkle paprika.",
+      "Serve with sliced veggies."
+    ]
+  },
+  {
+    "id": "r29",
+    "name": "Egg Fried Noodles",
+    "timeMinutes": 22,
+    "imageAsset": "assets/images/r29_egg_fried_noodles.png",
+    "description": "Quick noodles with egg and veggies.",
+    "ingredients": [
+      {
+        "name": "noodles",
+        "amount": "200 g"
+      },
+      {
+        "name": "egg",
+        "amount": "1"
+      },
+      {
+        "name": "carrot",
+        "amount": "1/2"
+      },
+      {
+        "name": "soy sauce",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook noodles; drain.",
+      "Scramble egg in oil; add carrot and cook 2 minutes.",
+      "Add noodles and soy sauce; toss and serve."
+    ]
+  },
+  {
+    "id": "r30",
+    "name": "Berry Yogurt Bowl",
+    "timeMinutes": 5,
+    "imageAsset": "assets/images/r30_berry_yogurt_bowl.png",
+    "description": "Yogurt bowl with berries.",
+    "ingredients": [
+      {
+        "name": "yogurt",
+        "amount": "200 g"
+      },
+      {
+        "name": "berries",
+        "amount": "120 g"
+      },
+      {
+        "name": "granola",
+        "amount": "40 g"
+      },
+      {
+        "name": "honey",
+        "amount": "1 tsp"
+      }
+    ],
+    "steps": [
+      "Add yogurt to bowl.",
+      "Top with berries and granola; drizzle honey."
+    ]
+  },
+  {
+    "id": "r31",
+    "name": "Grilled Cheese",
+    "timeMinutes": 8,
+    "imageAsset": "assets/images/r31_rilled_cheese_sandwich.png",
+    "description": "Golden grilled cheese sandwich.",
+    "ingredients": [
+      {
+        "name": "bread",
+        "amount": "2 slices"
+      },
+      {
+        "name": "cheddar",
+        "amount": "80 g"
+      },
+      {
+        "name": "butter",
+        "amount": "1 tbsp"
+      }
+    ],
+    "steps": [
+      "Butter bread, add cheese, and grill in a pan until golden and melted."
+    ]
+  },
+  {
+    "id": "r32",
+    "name": "Pumpkin Soup",
+    "timeMinutes": 35,
+    "imageAsset": "assets/images/r32_pumpkin_soup.png",
+    "description": "Creamy pumpkin soup.",
+    "ingredients": [
+      {
+        "name": "pumpkin",
+        "amount": "400 g"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "vegetable broth",
+        "amount": "700 ml"
+      },
+      {
+        "name": "cream",
+        "amount": "80 ml"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      },
+      {
+        "name": "water",
+        "amount": "100 ml"
+      }
+    ],
+    "steps": [
+      "Sauté onion, add pumpkin and cook 3 minutes.",
+      "Add broth and water; simmer 20 minutes.",
+      "Blend, stir in cream, season."
+    ]
+  },
+  {
+    "id": "r33",
+    "name": "Couscous Salad",
+    "timeMinutes": 15,
+    "imageAsset": "assets/images/r33_couscous_salad.png",
+    "description": "Fast couscous salad with herbs.",
+    "ingredients": [
+      {
+        "name": "couscous",
+        "amount": "150 g"
+      },
+      {
+        "name": "water",
+        "amount": "200 ml"
+      },
+      {
+        "name": "cucumber",
+        "amount": "1/2"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "1"
+      },
+      {
+        "name": "lemon juice",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Pour hot water over couscous; cover 5 minutes.",
+      "Fluff couscous; add chopped veggies.",
+      "Dress with lemon and olive oil; season."
+    ]
+  },
+  {
+    "id": "r34",
+    "name": "Baked Oatmeal",
+    "timeMinutes": 35,
+    "imageAsset": "assets/images/r34_baked_oatmeal.png",
+    "description": "Warm baked oatmeal breakfast.",
+    "ingredients": [
+      {
+        "name": "oats",
+        "amount": "180 g"
+      },
+      {
+        "name": "milk",
+        "amount": "300 ml"
+      },
+      {
+        "name": "banana",
+        "amount": "1"
+      },
+      {
+        "name": "cinnamon",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "honey",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "pinch"
+      }
+    ],
+    "steps": [
+      "Mash banana and mix with milk, oats, cinnamon, honey.",
+      "Bake at 180°C for 25 minutes."
+    ]
+  },
+  {
+    "id": "r35",
+    "name": "Shrimp Pasta",
+    "timeMinutes": 20,
+    "imageAsset": "assets/images/r35_shrimp_pasta.png",
+    "description": "Garlic shrimp pasta.",
+    "ingredients": [
+      {
+        "name": "pasta",
+        "amount": "200 g"
+      },
+      {
+        "name": "shrimp",
+        "amount": "200 g"
+      },
+      {
+        "name": "garlic",
+        "amount": "2 cloves"
+      },
+      {
+        "name": "olive oil",
+        "amount": "2 tbsp"
+      },
+      {
+        "name": "lemon juice",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook pasta; reserve some pasta water.",
+      "Sauté garlic in oil; add shrimp until pink.",
+      "Toss with pasta, lemon juice, and a splash of pasta water; season."
+    ]
+  },
+  {
+    "id": "r36",
+    "name": "Falafel Bowl",
+    "timeMinutes": 25,
+    "imageAsset": "assets/images/r36_falafel_bowl.png",
+    "description": "Bowl with falafel and salad.",
+    "ingredients": [
+      {
+        "name": "falafel",
+        "amount": "6 pieces"
+      },
+      {
+        "name": "lettuce",
+        "amount": "60 g"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "1"
+      },
+      {
+        "name": "cucumber",
+        "amount": "1/2"
+      },
+      {
+        "name": "yogurt sauce",
+        "amount": "3 tbsp"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Bake or pan-warm falafel.",
+      "Assemble bowl with chopped salad.",
+      "Top with falafel and yogurt sauce."
+    ]
+  },
+  {
+    "id": "r37",
+    "name": "Simple Pizza Toast",
+    "timeMinutes": 15,
+    "imageAsset": "assets/images/r37_simple_pizza_toast.png",
+    "description": "Toast topped like mini pizza.",
+    "ingredients": [
+      {
+        "name": "bread",
+        "amount": "2 slices"
+      },
+      {
+        "name": "tomato sauce",
+        "amount": "2 tbsp"
+      },
+      {
+        "name": "mozzarella",
+        "amount": "80 g"
+      },
+      {
+        "name": "oregano",
+        "amount": "1 tsp"
+      }
+    ],
+    "steps": [
+      "Spread tomato sauce on bread.",
+      "Top with mozzarella and oregano.",
+      "Bake or air-fry until cheese melts."
+    ]
+  },
+  {
+    "id": "r38",
+    "name": "Beet Feta Salad",
+    "timeMinutes": 15,
+    "imageAsset": "assets/images/r38_beet_feta_salad.png",
+    "description": "Sweet beet salad with feta.",
+    "ingredients": [
+      {
+        "name": "beetroot (cooked)",
+        "amount": "250 g"
+      },
+      {
+        "name": "feta",
+        "amount": "80 g"
+      },
+      {
+        "name": "walnuts",
+        "amount": "40 g"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "lemon juice",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cube beetroot.",
+      "Add feta and walnuts.",
+      "Dress with olive oil and lemon; season."
+    ]
+  },
+  {
+    "id": "r39",
+    "name": "Porridge",
+    "timeMinutes": 8,
+    "imageAsset": "assets/images/r39_porridge.png",
+    "description": "Classic oatmeal porridge.",
+    "ingredients": [
+      {
+        "name": "oats",
+        "amount": "60 g"
+      },
+      {
+        "name": "milk",
+        "amount": "250 ml"
+      },
+      {
+        "name": "banana",
+        "amount": "1/2"
+      },
+      {
+        "name": "salt",
+        "amount": "pinch"
+      },
+      {
+        "name": "water",
+        "amount": "50 ml"
+      }
+    ],
+    "steps": [
+      "Simmer oats with milk and water 5 minutes, stirring.",
+      "Top with banana slices."
+    ]
+  },
+  {
+    "id": "r40",
+    "name": "Chicken Quesadilla",
+    "timeMinutes": 18,
+    "imageAsset": "assets/images/r40_chicken_quesadilla.png",
+    "description": "Cheesy quesadilla with chicken.",
+    "ingredients": [
+      {
+        "name": "tortilla",
+        "amount": "1"
+      },
+      {
+        "name": "chicken",
+        "amount": "150 g"
+      },
+      {
+        "name": "cheddar",
+        "amount": "80 g"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "1/2"
+      },
+      {
+        "name": "oil",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook chicken; slice.",
+      "Fill tortilla with chicken, cheese, tomato.",
+      "Fold and toast in a pan with a little oil until golden."
+    ]
+  },
+  {
+    "id": "r41",
+    "name": "Rice & Beans Bowl",
+    "timeMinutes": 22,
+    "imageAsset": "assets/images/r41_rice_beans_bowl.png",
+    "description": "Simple rice bowl with beans.",
+    "ingredients": [
+      {
+        "name": "rice",
+        "amount": "150 g"
+      },
+      {
+        "name": "kidney beans",
+        "amount": "1 can"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "150 g"
+      },
+      {
+        "name": "onion",
+        "amount": "1/4"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "water",
+        "amount": "350 ml"
+      }
+    ],
+    "steps": [
+      "Cook rice in water.",
+      "Warm beans with tomatoes and onion.",
+      "Serve beans over rice; season."
+    ]
+  },
+  {
+    "id": "r42",
+    "name": "Cucumber Yogurt Dip",
+    "timeMinutes": 8,
+    "imageAsset": "assets/images/r42_cucumber_yogurt_dip.png",
+    "description": "Refreshing yogurt dip.",
+    "ingredients": [
+      {
+        "name": "yogurt",
+        "amount": "200 g"
+      },
+      {
+        "name": "cucumber",
+        "amount": "1/2"
+      },
+      {
+        "name": "garlic",
+        "amount": "1 clove"
+      },
+      {
+        "name": "lemon juice",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Grate cucumber and squeeze excess liquid.",
+      "Mix with yogurt, garlic, lemon; season."
+    ]
+  },
+  {
+    "id": "r43",
+    "name": "Sausage & Potatoes",
+    "timeMinutes": 35,
+    "imageAsset": "assets/images/r43_sausage_potatoes.png",
+    "description": "Pan-roasted sausage with potatoes.",
+    "ingredients": [
+      {
+        "name": "sausages",
+        "amount": "2"
+      },
+      {
+        "name": "potatoes",
+        "amount": "3"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Dice potatoes; pan-fry in oil until nearly tender.",
+      "Add sliced sausage and onion; cook until browned; season."
+    ]
+  },
+  {
+    "id": "r44",
+    "name": "Veggie Pasta Bake",
+    "timeMinutes": 40,
+    "imageAsset": "assets/images/r44_veggie_pasta_bake.png",
+    "description": "Baked pasta with vegetables and cheese.",
+    "ingredients": [
+      {
+        "name": "pasta",
+        "amount": "220 g"
+      },
+      {
+        "name": "tomato sauce",
+        "amount": "250 ml"
+      },
+      {
+        "name": "zucchini",
+        "amount": "1/2"
+      },
+      {
+        "name": "mozzarella",
+        "amount": "120 g"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Cook pasta; drain.",
+      "Mix with tomato sauce and diced zucchini.png",
+      "Top with mozzarella and bake at 200°C for 20 minutes."
+    ]
+  },
+  {
+    "id": "r45",
+    "name": "Apple Cinnamon Yogurt",
+    "timeMinutes": 5,
+    "imageAsset": "assets/images/r45_apple_cinnamon_yogurt.png",
+    "description": "Quick sweet yogurt snack.",
+    "ingredients": [
+      {
+        "name": "yogurt",
+        "amount": "200 g"
+      },
+      {
+        "name": "apple",
+        "amount": "1/2"
+      },
+      {
+        "name": "cinnamon",
+        "amount": "1/2 tsp"
+      },
+      {
+        "name": "honey",
+        "amount": "1 tsp"
+      }
+    ],
+    "steps": [
+      "Dice apple; mix into yogurt with cinnamon and honey."
+    ]
+  },
+  {
+    "id": "r46",
+    "name": "Garlic Butter Green Beans",
+    "timeMinutes": 12,
+    "imageAsset": "assets/images/r46_garlic_butter_green_beans.png",
+    "description": "Simple side dish green beans.",
+    "ingredients": [
+      {
+        "name": "green beans",
+        "amount": "250 g"
+      },
+      {
+        "name": "butter",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "garlic",
+        "amount": "1 clove"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      },
+      {
+        "name": "water",
+        "amount": "50 ml"
+      }
+    ],
+    "steps": [
+      "Steam green beans with a splash of water 5 minutes.",
+      "Add butter and garlic; toss and season."
+    ]
+  },
+  {
+    "id": "r47",
+    "name": "Tomato Egg Rice",
+    "timeMinutes": 18,
+    "imageAsset": "assets/images/r47_tomato_egg_rice.png",
+    "description": "Comfort rice with tomato and egg.",
+    "ingredients": [
+      {
+        "name": "rice (cooked)",
+        "amount": "300 g"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "200 g"
+      },
+      {
+        "name": "eggs",
+        "amount": "2"
+      },
+      {
+        "name": "oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Scramble eggs; set aside.",
+      "Cook tomatoes in oil until saucy.",
+      "Add rice and eggs; toss and season."
+    ]
+  },
+  {
+    "id": "r48",
+    "name": "Baked Chicken Thighs",
+    "timeMinutes": 35,
+    "imageAsset": "assets/images/r48_baked_chicken_thighs.png",
+    "description": "Juicy baked chicken thighs.",
+    "ingredients": [
+      {
+        "name": "chicken thighs",
+        "amount": "4"
+      },
+      {
+        "name": "olive oil",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "paprika",
+        "amount": "1 tsp"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "pepper",
+        "amount": "to taste"
+      }
+    ],
+    "steps": [
+      "Rub chicken with oil and spices.",
+      "Bake at 200°C for 30 minutes or until done."
+    ]
+  },
+  {
+    "id": "r49",
+    "name": "Peanut Butter Banana Toast",
+    "timeMinutes": 7,
+    "imageAsset": "assets/images/r49_peanut_butter_banana_toast.png",
+    "description": "Sweet toast with peanut butter and banana.",
+    "ingredients": [
+      {
+        "name": "bread",
+        "amount": "1 slice"
+      },
+      {
+        "name": "peanut butter",
+        "amount": "1 tbsp"
+      },
+      {
+        "name": "banana",
+        "amount": "1/2"
+      }
+    ],
+    "steps": [
+      "Toast bread, spread peanut butter, top with banana slices."
+    ]
+  },
+  {
+    "id": "r50",
+    "name": "Simple Lentil Stew",
+    "timeMinutes": 45,
+    "imageAsset": "assets/images/r50_simple_lentil_stew.png",
+    "description": "Hearty lentil stew with vegetables.",
+    "ingredients": [
+      {
+        "name": "lentils",
+        "amount": "180 g"
+      },
+      {
+        "name": "carrot",
+        "amount": "1"
+      },
+      {
+        "name": "onion",
+        "amount": "1/2"
+      },
+      {
+        "name": "tomatoes",
+        "amount": "200 g"
+      },
+      {
+        "name": "salt",
+        "amount": "to taste"
+      },
+      {
+        "name": "water",
+        "amount": "800 ml"
+      }
+    ],
+    "steps": [
+      "Rinse lentils; add to pot with water.",
+      "Add chopped carrot, onion, tomatoes.",
+      "Simmer 35 minutes; season."
+    ]
+  }
+]
