@@ -58,7 +58,14 @@ Student project / functional prototype
 
 ## Screenshots
 
-![Fridge Screen](fridge.png)
-![Recipes Screen](recipes.png)
-![Calendar Screen](calendar.png)
-![Bookmarks Screen](bookmarks.png)
+### Recipes for You
+<img width="300" src="https://github.com/user-attachments/assets/a3c07687-b1cc-445c-a3ea-4db006dac5f7" />
+
+### Calendar
+<img width="300" src="https://github.com/user-attachments/assets/dfa74756-1aad-4a1c-8b67-037432267668" />
+
+### Bookmarks & Recipe Details
+<img width="300" src="https://github.com/user-attachments/assets/9d035f45-4e9a-4fc3-870e-7de327cdbdcc" />
+
+### Fridge & All Recipes
+<img width="300" src="https://github.com/user-attachments/assets/8a061af1-10e0-4591-8f3d-4f75fde371f3" />
