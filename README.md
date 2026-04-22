@@ -1,7 +1,8 @@
 # InMyFridge
 
 ## Description
-InMyFridge is an offline-first mobile application that helps users manage ingredients they already have at home and discover suitable recipes based on those ingredients. The app aims to reduce food waste and simplify everyday meal planning.
+InMyFridge is an offline-first mobile application that helps users manage ingredients they already have at home and discover suitable recipes based on those ingredients. The app aims to reduce food waste and simplify everyday meal planning. Offline-first architecture ensures full functionality without internet connection.
+Data is stored locally using Hive (NoSQL database).
 
 ## Key Features
 - Ingredient management (add, edit, delete)
